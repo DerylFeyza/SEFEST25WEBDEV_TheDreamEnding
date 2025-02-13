@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { FileUploader } from "@/components/file-uploader";
 import { Item } from "@/types/entities";
@@ -22,6 +24,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { handleCreateItem } from "@/app/utils/actions/item";
+import { toast } from "sonner";
+
 import * as z from "zod";
 
 const MAX_FILE_SIZE = 5000000;
@@ -45,17 +51,17 @@ const formSchema = z.object({
 			".jpg, .jpeg, .png and .webp files are accepted."
 		),
 	name: z.string().min(2, {
-		message: "Product name must be at least 2 characters.",
-	}),
-	condition: z.string().min(2, {
-		message: "Product condition must be at least 2 characters.",
-	}),
-	location: z.string().min(2, {
-		message: "Product location must be at least 2 characters.",
+		message: "Item name must be at least 2 characters.",
 	}),
 	category: z.string(),
-	price: z.number(),
-	amount: z.number(),
+	price: z.string(),
+	condition: z.string().min(2, {
+		message: "Item condition must be at least 2 characters.",
+	}),
+	location: z.string().min(2, {
+		message: "Item location must be at least 2 characters.",
+	}),
+	amount: z.string(),
 	description: z.string().min(10, {
 		message: "Description must be at least 10 characters.",
 	}),
@@ -65,15 +71,19 @@ export default function ItemForm({
 	initialData,
 	pageTitle,
 }: {
-	initialData: Item | null;
+	initialData?: Item | null;
 	pageTitle?: "hi";
 }) {
+	const [loading, setLoading] = useState(false);
+	const { data: session } = useSession();
+	const router = useRouter();
 	const defaultValues = {
+		image_url: initialData?.image_url || "",
 		name: initialData?.name || "",
 		category: initialData?.category || "",
-		price: initialData?.price || 0,
+		price: initialData?.price ? initialData.price.toString() : "",
 		condition: initialData?.condition || "",
-		amount: initialData?.price || 0,
+		amount: initialData?.amount ? initialData.amount.toString() : "",
 		location: initialData?.location || "",
 		description: initialData?.description || "",
 	};
@@ -83,9 +93,51 @@ export default function ItemForm({
 		values: defaultValues,
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
-	}
+	const onSubmit = async (values: z.infer<typeof formSchema>) => {
+		setLoading(true);
+		const loadingToast = toast.loading(
+			initialData ? "Updating Item..." : "Adding Item..."
+		);
+
+		try {
+			if (!session?.user?.id) {
+				return toast.error("User not authenticated", { id: loadingToast });
+			}
+
+			const formData = new FormData();
+			formData.append("name", values.name);
+			formData.append("description", values.description);
+			formData.append("category", values.category);
+			formData.append("rent_price", values.price.toString());
+			formData.append("item_amount", values.amount.toString());
+			formData.append("condition", values.condition);
+			formData.append("pickup_location", values.location);
+			formData.append("owner_id", session?.user?.id);
+
+			if (values.image?.length > 0) {
+				formData.append("image", values.image[0]);
+			}
+
+			const result = await handleCreateItem(formData);
+
+			if (result.success) {
+				setLoading(false);
+				toast.success(
+					initialData ? "Item updated successfully" : "Item added successfully",
+					{ id: loadingToast }
+				);
+				return router.push("/lenders/dashboard/items");
+			}
+			return toast.error(
+				initialData ? "Item update failed" : "Item add failed",
+				{ id: loadingToast }
+			);
+		} catch (error) {
+			console.log(error);
+			setLoading(false);
+			return toast.error("Something Went Wrong!", { id: loadingToast });
+		}
+	};
 
 	return (
 		<Card className="mx-auto w-full">
@@ -110,11 +162,6 @@ export default function ItemForm({
 												onValueChange={field.onChange}
 												maxFiles={1}
 												maxSize={4 * 1024 * 1024}
-												// disabled={loading}
-												// progresses={progresses}
-												// pass the onUpload function here for direct upload
-												// onUpload={uploadFiles}
-												// disabled={isUploading}
 											/>
 										</FormControl>
 										<FormMessage />
@@ -129,9 +176,9 @@ export default function ItemForm({
 								name="name"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Product Name</FormLabel>
+										<FormLabel>Item Name</FormLabel>
 										<FormControl>
-											<Input placeholder="Enter product name" {...field} />
+											<Input placeholder="Enter Item name" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -153,7 +200,7 @@ export default function ItemForm({
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												<SelectItem value="beauty">Beauty Products</SelectItem>
+												<SelectItem value="beauty">Beauty Items</SelectItem>
 												<SelectItem value="electronics">Electronics</SelectItem>
 												<SelectItem value="clothing">Clothing</SelectItem>
 												<SelectItem value="home">Home & Garden</SelectItem>
@@ -173,12 +220,20 @@ export default function ItemForm({
 									<FormItem>
 										<FormLabel>Price</FormLabel>
 										<FormControl>
-											<Input
-												type="number"
-												step="0.01"
-												placeholder="Enter price"
-												{...field}
-											/>
+											<Input type="number" step="0.01" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="amount"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Amount</FormLabel>
+										<FormControl>
+											<Input type="number" {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -189,9 +244,26 @@ export default function ItemForm({
 								name="condition"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Product Condition</FormLabel>
+										<FormLabel>Condition</FormLabel>
 										<FormControl>
-											<Input placeholder="Enter product Condition" {...field} />
+											<Input placeholder="Enter condition" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="location"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Pick Up Location</FormLabel>
+										<FormControl>
+											<Input
+												type="location"
+												placeholder="Enter Pick Up Location"
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -206,7 +278,7 @@ export default function ItemForm({
 									<FormLabel>Description</FormLabel>
 									<FormControl>
 										<Textarea
-											placeholder="Enter product description"
+											placeholder="Enter Item description"
 											className="resize-none"
 											{...field}
 										/>
@@ -215,7 +287,7 @@ export default function ItemForm({
 								</FormItem>
 							)}
 						/>
-						<Button type="submit">Add Product</Button>
+						<Button type="submit">Add Item</Button>
 					</form>
 				</Form>
 			</CardContent>
