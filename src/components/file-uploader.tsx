@@ -276,8 +276,8 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
 					<Image
 						src={file.preview}
 						alt={file.name}
-						width={48}
-						height={48}
+						width={150}
+						height={150}
 						loading="lazy"
 						className="aspect-square shrink-0 rounded-md object-cover"
 					/>
