@@ -1,21 +1,18 @@
-import { getAllItems, findAllItems } from "@/app/utils/database/item.query";
+import { findAllItems } from "@/app/utils/database/item.query";
+import { nextGetServerSession } from "@/lib/next-auth";
 import ItemsPage from "./ItemsPage";
-import { Item } from "@prisma/client";
 export default async function page({
 	searchParams,
 }: {
 	searchParams: Promise<{ search: string }>;
 }) {
 	const { search } = await searchParams;
-	let items: Item[];
-	if (search) {
-		items = await findAllItems({
-			name: search,
-			description: search,
-		});
-	} else {
-		items = await getAllItems();
-	}
+	const session = await nextGetServerSession();
+	const items = await findAllItems({
+		search: { name: search, description: search },
+		where: { is_deleted: false, owner_id: session!.user!.id },
+	});
+
 	return (
 		<div>
 			<ItemsPage items={items} search={search} />

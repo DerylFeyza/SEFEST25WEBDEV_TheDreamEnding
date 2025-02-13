@@ -1,14 +1,6 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
-export const getAllItems = async () => {
-	return await prisma.item.findMany({
-		orderBy: {
-			createdAt: "asc",
-		},
-	});
-};
-
 export const findItem = async (where: Prisma.ItemWhereUniqueInput) => {
 	return await prisma.item.findUnique({
 		where: {
@@ -18,20 +10,27 @@ export const findItem = async (where: Prisma.ItemWhereUniqueInput) => {
 	});
 };
 
-export const findAllItems = async (where: Prisma.ItemWhereInput) => {
+export const findAllItems = async ({
+	search,
+	where,
+}: {
+	search?: Prisma.ItemWhereInput;
+	where?: Prisma.ItemWhereInput;
+}) => {
 	return await prisma.item.findMany({
 		where: {
-			...(where.name || where.category
+			...(search?.name || search?.category
 				? {
 						OR: [
-							where.name ? { name: { contains: where.name } } : undefined,
-							where.category
-								? { category: { contains: where.category } }
+							search.name ? { name: { contains: search.name } } : undefined,
+							search.category
+								? { category: { contains: search.category } }
 								: undefined,
 						].filter(Boolean) as Prisma.ItemWhereInput[],
 				  }
 				: {}),
 			is_deleted: false,
+			...where,
 		},
 		orderBy: {
 			createdAt: "asc",
