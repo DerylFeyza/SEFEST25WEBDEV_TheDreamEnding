@@ -7,7 +7,7 @@ export function Header() {
   return (
     <header
       id="layout-header"
-      className="sticky top-0 z-50 p-4 text-white bg-green-800"
+      className="sticky top-0 z-50 p-4 mb-8 text-white bg-green-800"
     >
       <div className="container flex items-center justify-between mx-auto">
         <Link href="/" className="text-2xl font-bold">

@@ -22,16 +22,17 @@ interface RentalCardProps {
 }
 
 export function RentalCard({ item, items, setItems }: RentalCardProps) {
-  const layoutHeader = document.getElementById("layout-header");
   const [layoutHeaderHeight, setLayoutHeaderHeight] = useState(0);
   useEffect(() => {
+    const layoutHeader = document.getElementById("layout-header");
     if (layoutHeader) {
-      setLayoutHeaderHeight(layoutHeader.offsetHeight);
+      const height = layoutHeader.clientHeight;
+      setLayoutHeaderHeight(height);
     }
   }, []);
 
   return (
-    <Card className={cn("sticky", `top-${layoutHeaderHeight}`)}>
+    <Card className={cn(" sticky")} style={{ top: layoutHeaderHeight }}>
       <CardHeader>
         <CardTitle>Rent This Item</CardTitle>
       </CardHeader>
