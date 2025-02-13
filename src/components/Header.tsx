@@ -27,9 +27,6 @@ export function Header() {
           <Link href="/rentals" className="hover:text-green-300">
             My Rentals
           </Link>
-          <Link href="/sustainability" className="hover:text-green-300">
-            Sustainability
-          </Link>
           <Link href="/contact" className="hover:text-green-300">
             Contact Us
           </Link>

@@ -6,9 +6,7 @@ export function ItemDetails({ item }: { item: Item }) {
     <div>
       <h1 className="mb-2 text-3xl font-semibold">{item.name}</h1>
       <div className="flex items-center gap-2 mb-4">
-        <Badge variant="secondary">
-          {item.id} TODO: This Should Be A Category
-        </Badge>
+        <Badge variant="secondary">{item.category}</Badge>
         <Badge variant="outline">{item.condition}</Badge>
       </div>
       <div className="mb-4">
@@ -20,7 +18,12 @@ export function ItemDetails({ item }: { item: Item }) {
         </p>
       </div>
       <div className="space-y-2 text-gray-600">
-        <p>Condition: {item.condition}</p>
+        <p>
+          <span className="font-semibold">Condition:</span> {item.condition}
+        </p>
+        <p>
+          <span className="font-semibold">Description:</span> {item.description}
+        </p>
       </div>
     </div>
   );

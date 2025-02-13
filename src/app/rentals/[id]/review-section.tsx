@@ -19,16 +19,13 @@ export function ReviewSection({ reviews }: { reviews: ReviewWithUser[] }) {
     : reviews;
   const handleFilterChange = (rating: number | null) => {
     setFilteredRating(rating);
-
     const newSearchParams = new URLSearchParams(searchParams.toString());
-
     if (rating) {
       newSearchParams.set("rating", rating.toString());
     } else {
       newSearchParams.delete("rating");
     }
-
-    router.push(`?${newSearchParams.toString()}`);
+    router.push(`?${newSearchParams.toString()}`, { scroll: false });
   };
   return (
     <div className="mt-8">

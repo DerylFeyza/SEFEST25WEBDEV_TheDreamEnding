@@ -110,12 +110,15 @@ export const handleDeleteItem = async (id: string) => {
 export const getItems = async () => {
   return await prisma.item.findMany({});
 };
-export const getItemsByID = async (id: string, rating?: number) => {
+export const getItemsByID = async (
+  id: string,
+  rating: number | undefined = undefined
+) => {
   return await prisma.item.findUnique({
     where: { id },
     include: {
       reviews: {
-        where: { rating },
+        where: rating ? { rating } : undefined,
         include: {
           user: true,
         },
