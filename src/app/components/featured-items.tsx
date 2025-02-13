@@ -12,19 +12,19 @@ const featuredItems = [
   {
     id: 1,
     name: "Camping Tent",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://picsum.photos/200/300",
     description: "4-person tent, perfect for weekend getaways",
   },
   {
     id: 2,
     name: "Mountain Bike",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://picsum.photos/200/300",
     description: "All-terrain bike for adventurous trails",
   },
   {
     id: 3,
     name: "Kayak",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "https://picsum.photos/200/300",
     description: "Single-person kayak for lake exploration",
   },
 ];
@@ -35,13 +35,13 @@ export function FeaturedItems() {
       <h2 className="text-2xl font-bold mb-4">Featured Items</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {featuredItems.map((item) => (
-          <Card key={item.id}>
+          <Card key={item.id} className="grid grid-rows-[auto_1fr_auto]">
             <CardHeader>
               <CardTitle>{item.name}</CardTitle>
             </CardHeader>
             <CardContent>
               <Image
-                src={item.image || "/placeholder.svg"}
+                src={"https://picsum.photos/200/300"}
                 alt={item.name}
                 width={200}
                 height={200}
