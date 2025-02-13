@@ -36,7 +36,9 @@ model Item {
   condition       String?
   image_url       String?
   available       Boolean  @default(true)
+  item_amount     Int      @default(1)
   owner_id        String
+  is_deleted      Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   rentals         Rental[]
