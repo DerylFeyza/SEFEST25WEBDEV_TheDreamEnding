@@ -1,95 +1,124 @@
-// import { type DefaultSession, AuthOptions, getServerSession } from "next-auth";
-// import { findUser } from "@/app/utils/database/user.query";
-// import { compareHash } from "@/app/utils/bcrypt";
-// import CredentialsProvider from "next-auth/providers/credentials";
-// import { Role } from "@prisma/client";
+import { AuthOptions, getServerSession } from "next-auth";
+import type { DefaultJWT } from "next-auth/jwt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import { createUser, findUser } from "@/app/utils/database/user.query";
+import { compareHash } from "@/app/utils/bcrypt";
 
-// declare module "next-auth" {
-// 	interface Session {
-// 		user?: {
-// 			id_user: string;
-// 			nama_user: string;
-// 			role: Role;
-// 			username: string;
-// 		} & DefaultSession["user"];
-// 	}
-// }
+declare module "next-auth" {
+	interface Session {
+		user?: {
+			id: string;
+			email: string;
+			name: string;
+		};
+	}
+}
 
-// export const authOptions: AuthOptions = {
-// 	session: {
-// 		strategy: "jwt",
-// 	},
-// 	providers: [
-// 		CredentialsProvider({
-// 			name: "Credentials",
-// 			credentials: {
-// 				username: {
-// 					label: "username",
-// 					type: "text",
-// 					placeholder: "deryl",
-// 				},
-// 				password: { label: "Password", type: "password" },
-// 			},
-// 			async authorize(credentials) {
-// 				try {
-// 					const user = await findUser({ username: credentials?.username });
-// 					if (!user) {
-// 						return null;
-// 					}
+declare module "next-auth/jwt" {
+	interface JWT extends DefaultJWT {
+		id: string;
+		email: string;
+		name: string;
+	}
+}
 
-// 					const comparePassword = await compareHash(
-// 						credentials!.password!,
-// 						user.password!
-// 					);
+export const authOptions: AuthOptions = {
+	session: {
+		strategy: "jwt",
+	},
+	providers: [
+		CredentialsProvider({
+			name: "Credentials",
+			credentials: {
+				email: {
+					label: "Email",
+					type: "email",
+					placeholder: "user@gmail.com",
+				},
+				password: {
+					label: "Password",
+					type: "password",
+					placeholder: "********",
+				},
+			},
+			async authorize(credentials) {
+				try {
+					const user = await findUser({ email: credentials?.email });
+					if (!user) return null;
+					if (!credentials?.password) return null;
 
-// 					console.log(comparePassword);
+					const comparePassword = await compareHash(
+						credentials?.password,
+						user.password!
+					);
 
-// 					if (!comparePassword) return null;
+					if (!comparePassword) return null;
 
-// 					const payload = {
-// 						id: user.id_user,
-// 						username: user.username,
-// 						nama_user: user.nama_user,
-// 						role: user.role,
-// 					};
+					const payload = {
+						id: user.id,
+						email: user.email,
+						name: user.name,
+					};
+					return payload;
+				} catch (e) {
+					console.error(e);
+					return null;
+				}
+			},
+		}),
+		GoogleProvider({
+			clientId: process.env.GOOGLE_CLIENT_ID,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+		}),
+	],
+	pages: {
+		signIn: "/login",
+	},
+	callbacks: {
+		async redirect({ url, baseUrl }) {
+			const redirectUrl = url.startsWith("/")
+				? new URL(url, baseUrl).toString()
+				: url;
+			return redirectUrl;
+		},
 
-// 					return payload;
-// 				} catch (error) {
-// 					console.error(error);
-// 					return null;
-// 				}
-// 			},
-// 		}),
-// 	],
-// 	callbacks: {
-// 		async jwt({ token, user }) {
-// 			if (user.username) {
-// 				const userdb = await findUser({ username: user.username });
-// 				if (!userdb) return token;
-// 				token.id = userdb.id_user;
-// 				token.username = userdb.username;
-// 				token.nama_user = userdb.nama_user;
-// 				token.role = userdb.role;
-// 			}
-// 			return token;
-// 		},
+		async signIn({ user, profile }) {
+			if (user.email) {
+				const userdb = await findUser({ email: user.email });
+				if (!userdb) {
+					await createUser({
+						email: user.email,
+						name: user.name || profile?.name || "",
+					});
+				}
+			}
 
-// 		async session({ session, token }) {
-// 			console.log(session, token);
-// 			if (session.user && token.id) {
-// 				const userdb = await findUser({ id_user: token.id });
-// 				session.user.nama_user = userdb!.nama_user;
-// 				session.user.username = userdb!.username;
-// 				session.user.id_user = userdb!.id_user;
-// 				session.user.role = userdb!.role;
-// 			}
-// 			return session;
-// 		},
-// 	},
-// 	secret: process.env.NEXTAUTH_SECRET,
-// 	pages: {
-// 		signIn: "/login",
-// 	},
-// };
+			return true;
+		},
 
-// export const nextGetServerSession = () => getServerSession(authOptions);
+		async jwt({ token, user }) {
+			if (user?.email) {
+				const userdb = await findUser({ email: user.email });
+				if (!userdb) return token;
+				token.id = userdb.id;
+				token.email = userdb.email;
+				token.name = userdb.name;
+			}
+			return token;
+		},
+
+		async session({ session, token }) {
+			if (token.email && session.user) {
+				const userdb = await findUser({ id: token.id as string });
+				session.user.id = userdb?.id as string;
+				session.user.name = userdb?.name as string;
+				session.user.email = userdb?.email as string;
+			}
+			return session;
+		},
+	},
+	secret: process.env.NEXTAUTH_SECRET!,
+};
+
+export const nextGetServerSession = () => getServerSession(authOptions);

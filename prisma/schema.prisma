@@ -7,11 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
-  USER
-  LENDER
-}
-
 enum RentalStatus {
   PENDING
   CONFIRMED
@@ -24,8 +19,7 @@ model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
-  password  String
-  role      Role     @default(USER)
+  password  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   items     Item[]
@@ -34,32 +28,33 @@ model User {
 }
 
 model Item {
-  id          String   @id @default(uuid())
-  name        String
-  rent_price  Int
-  description String?
-  condition   String?
-  image_url   String?
-  available   Boolean  @default(true)
-  owner_id    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  rentals     Rental[]
-  reviews     Review[]
-  owner       User     @relation(fields: [owner_id], references: [id])
+  id              String   @id @default(uuid())
+  name            String
+  rent_price      Int
+  pickup_location String
+  description     String?
+  condition       String?
+  image_url       String?
+  available       Boolean  @default(true)
+  owner_id        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  rentals         Rental[]
+  reviews         Review[]
+  owner           User     @relation(fields: [owner_id], references: [id])
 }
 
 model Rental {
-  id        String       @id @default(uuid())
-  item_id   String
-  user_id   String
-  startDate DateTime
-  endDate   DateTime
-  status    RentalStatus @default(PENDING)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  item      Item         @relation(fields: [item_id], references: [id])
-  User      User         @relation(fields: [user_id], references: [id])
+  id            String       @id @default(uuid())
+  item_id       String
+  user_id       String
+  start_date    DateTime
+  finished_date DateTime
+  status        RentalStatus @default(PENDING)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  item          Item         @relation(fields: [item_id], references: [id])
+  User          User         @relation(fields: [user_id], references: [id])
 }
 
 model Review {
