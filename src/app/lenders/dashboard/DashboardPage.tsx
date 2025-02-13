@@ -118,7 +118,10 @@ export default function DashboardPage() {
               </h3>
               <div className="flex gap-4">
                 <Button className="flex-1">
-                  <Plus className="w-4 h-4 mr-2" /> Add New Product
+                  <Plus className="w-4 h-4 mr-2" /> 
+                  <Link href="/lenders/dashboard/items/add">
+                  Add New Product
+                  </Link>
                 </Button>
                 <Button variant="outline" className="flex-1" asChild>
                   <Link href="/lenders/dashboard/items">

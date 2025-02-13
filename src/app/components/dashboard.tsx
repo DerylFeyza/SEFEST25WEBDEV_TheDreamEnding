@@ -1,4 +1,5 @@
 import { Layout } from "./layout";
+import { Hero } from "./hero";
 import { FeaturedItems } from "./featured-items";
 import { RentalHistory } from "./rental-history";
 import { SustainabilitySection } from "./sustainability-section";
@@ -8,6 +9,7 @@ import { UserEngagement } from "./user-engagement";
 export function Dashboard() {
   return (
     <Layout>
+      <Hero />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="col-span-2">
           <FeaturedItems />

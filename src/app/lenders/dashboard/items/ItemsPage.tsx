@@ -39,7 +39,10 @@ export default function ItemsPage({
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <CardTitle className="text-2xl font-bold">Products</CardTitle>
           <Button>
-            <Plus className="w-4 h-4 mr-2" /> Add Product
+            <Plus className="w-4 h-4 mr-2" />
+            <Link href="/lenders/dashboard/items/add">
+            Add Product
+            </Link>
           </Button>
         </CardHeader>
         <CardContent>
