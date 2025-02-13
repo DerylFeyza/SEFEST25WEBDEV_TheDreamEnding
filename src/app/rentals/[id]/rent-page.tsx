@@ -6,8 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ItemDetails } from "./item-details";
 import { RentalCard } from "./rental-card";
 import { ReviewSection } from "./review-section";
+import { Item as rentItem } from "@prisma/client";
 
-export default function RentPage() {
+export default function RentPage({ rentItems }: { rentItems: rentItem }) {
   const [items, setItems] = useState(1);
 
   const itemDetails = {
@@ -28,11 +29,12 @@ export default function RentPage() {
           <div className="md:grid-cols-2 grid gap-6">
             <div className="aspect-square relative">
               <Image
-                src="https://picsum.photos/800/800"
-                alt={itemDetails.name}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
+                src={rentItems.image_url!}
+                alt={rentItems.name}
+                priority
+                width={800}
+                height={800}
+                className="object-cover rounded-lg"
               />
             </div>
             <ItemDetails item={itemDetails} />
@@ -45,7 +47,7 @@ export default function RentPage() {
               <TabsTrigger value="rental-policy">Rental Policy</TabsTrigger>
             </TabsList>
             <TabsContent value="description">
-              <p className="text-gray-600">{itemDetails.description}</p>
+              <p className="text-gray-600">{rentItems.description}</p>
             </TabsContent>
             <TabsContent value="specifications">
               <ul className="text-gray-600 list-disc list-inside">
