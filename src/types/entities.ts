@@ -1,4 +1,5 @@
 export interface Item {
+	id: string;
 	name: string;
 	category: string;
 	price: number;
@@ -6,4 +7,5 @@ export interface Item {
 	amount: number;
 	location: string;
 	description: string;
+	image_url: string;
 }
