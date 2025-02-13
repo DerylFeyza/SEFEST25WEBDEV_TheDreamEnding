@@ -24,6 +24,9 @@ export const createRental = async (data: Prisma.RentalCreateInput) => {
   return await prisma.rental.create({ data });
 };
 
-export const updateRental = async (where: Prisma.RentalWhereUniqueInput, data: Prisma.RentalUpdateInput) => {
+export const updateRental = async (
+  where: Prisma.RentalWhereUniqueInput,
+  data: Prisma.RentalUpdateInput,
+) => {
   return await prisma.rental.update({ where, data });
 };

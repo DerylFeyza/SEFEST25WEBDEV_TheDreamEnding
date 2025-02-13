@@ -112,7 +112,7 @@ export const getItems = async () => {
 };
 export const getItemsByID = async (
   id: string,
-  rating: number | undefined = undefined
+  rating: number | undefined = undefined,
 ) => {
   return await prisma.item.findUnique({
     where: { id },

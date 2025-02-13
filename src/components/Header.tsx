@@ -15,7 +15,7 @@ export function Header() {
         </Link>
         <nav
           className={cn(
-            "hidden md:flex justify-center items-center space-x-4 "
+            "hidden md:flex justify-center items-center space-x-4 ",
           )}
         >
           <Link href="/" className="hover:text-green-300">

@@ -32,7 +32,7 @@ async function seed() {
       data: {
         name: faker.commerce.productName(),
         rent_price: parseInt(
-          faker.commerce.price({ min: 1000000, max: 10000000 })
+          faker.commerce.price({ min: 1000000, max: 10000000 }),
         ),
         pickup_location: faker.location.city(),
         description: faker.lorem.sentence({ min: 20, max: 75 }),

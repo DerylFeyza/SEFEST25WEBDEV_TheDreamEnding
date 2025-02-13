@@ -17,7 +17,10 @@ export const handleCreateRental = async (formData: FormData) => {
 
       await createRental(rental);
       revalidatePath("/rentals");
-      resolve({ success: true, message: "Rental request created successfully" });
+      resolve({
+        success: true,
+        message: "Rental request created successfully",
+      });
     } catch (error) {
       resolve({ success: false, message: "Failed to create rental request" });
     }

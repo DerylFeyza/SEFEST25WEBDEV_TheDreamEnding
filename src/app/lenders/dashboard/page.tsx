@@ -1,8 +1,8 @@
 import DashboardPage from "./DashboardPage";
 export default function page() {
-	return (
-		<div>
-			<DashboardPage />
-		</div>
-	);
+  return (
+    <div>
+      <DashboardPage />
+    </div>
+  );
 }

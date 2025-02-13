@@ -52,7 +52,7 @@ export default function SignupForm() {
       const validationErrors = validationResult.error.format();
       const errorMessages = Object.values(validationErrors)
         .map((fieldError) =>
-          Array.isArray(fieldError) ? fieldError[0] : fieldError?._errors?.[0]
+          Array.isArray(fieldError) ? fieldError[0] : fieldError?._errors?.[0],
         )
         .filter((message) => message)
         .join("\n");
@@ -84,7 +84,7 @@ export default function SignupForm() {
         "An unexpected error occurred. Please try again later.",
         {
           id: loadingId,
-        }
+        },
       );
     }
   };
