@@ -17,6 +17,10 @@ async function seed() {
         email: faker.internet.email(),
         password:
           "$2a$12$ZJXKiUxZVmpp/is2EC5yx.vilUBNFbMa0Nrbi1YMf3kvLyxET.bOm",
+        profile_picture_url: faker.image.personPortrait({
+          sex: "female",
+          size: 128,
+        }),
       },
     });
     users.push(user);
@@ -54,7 +58,7 @@ async function seed() {
         ]),
         available: faker.datatype.boolean(),
         item_amount: faker.number.int({ min: 1, max: 10 }),
-        image_url: faker.image.urlLoremFlickr(),
+        image_url: faker.image.urlLoremFlickr({ width: 640, height: 480 }),
         owner_id: randomUser.id,
       },
     });
