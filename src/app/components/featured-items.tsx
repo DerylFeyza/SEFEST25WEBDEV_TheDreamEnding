@@ -1,6 +1,12 @@
-import { Card, CardBody, CardFooter } from "@heroui/card";
-import { Button } from "@heroui/button";
-import { Image } from "@heroui/image";
+import Image from "next/image";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const featuredItems = [
   {
@@ -23,28 +29,28 @@ const featuredItems = [
   },
 ];
 
-export default function FeaturedItems() {
+export function FeaturedItems() {
   return (
-    <section className="my-8">
-      <h2 className="text-2xl font-bold mb-4 text-green-800">Featured Items</h2>
+    <section className="mb-8">
+      <h2 className="text-2xl font-bold mb-4">Featured Items</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {featuredItems.map((item) => (
           <Card key={item.id}>
-            <CardBody className="p-0">
+            <CardHeader>
+              <CardTitle>{item.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
               <Image
                 src={item.image || "/placeholder.svg"}
                 alt={item.name}
-                width={300}
+                width={200}
                 height={200}
-                className="object-cover w-full h-[200px]"
+                className="w-full h-40 object-cover rounded-md mb-2"
               />
-            </CardBody>
-            <CardFooter className="flex-col items-start gap-2">
-              <h4 className="font-bold text-large">{item.name}</h4>
-              <p className="text-small text-default-500">{item.description}</p>
-              <Button color="primary" className="mt-2">
-                Rent Now
-              </Button>
+              <p className="text-sm text-gray-600">{item.description}</p>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full">Rent Now</Button>
             </CardFooter>
           </Card>
         ))}
