@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ThumbsUp, ThumbsDown, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { FilterReviews } from "./filter-reviews";
+import { Review, User } from "@prisma/client";
 
 // Mock review data
 const mockReviews = [
@@ -63,13 +64,16 @@ const mockReviews = [
     replies: 5,
   },
 ];
+type ReviewWithUser = Review & { user: User };
 
-export function ReviewSection() {
+export function ReviewSection({ reviews }: { reviews: ReviewWithUser[] }) {
+  console.log(reviews);
+
   const [filteredRating, setFilteredRating] = useState<number | null>(null);
 
   const filteredReviews = filteredRating
-    ? mockReviews.filter((review) => review.rating === filteredRating)
-    : mockReviews;
+    ? reviews.filter((review) => review.rating === filteredRating)
+    : reviews;
 
   return (
     <div className="mt-8">
@@ -83,17 +87,17 @@ export function ReviewSection() {
                 <div className="flex items-center space-x-2">
                   <Avatar>
                     <AvatarImage
-                      src={`https://i.pravatar.cc/150?u=${review.author}`}
+                      src={`https://i.pravatar.cc/150?u=${review.user.name}`}
                     />
                     <AvatarFallback>
-                      {review.author
+                      {review.user.name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold">{review.author}</p>
+                    <p className="font-semibold">{review.user.name}</p>
                     <div className="flex items-center">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
@@ -108,22 +112,12 @@ export function ReviewSection() {
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">{review.date}</p>
+                <p className="text-sm text-gray-500">
+                  {review.createdAt.toDateString()}
+                </p>
               </div>
-              <p className="mb-4 text-gray-600">{review.content}</p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <Button variant="ghost" size="sm">
-                    <ThumbsUp className="w-4 h-4 mr-2" /> Helpful (
-                    {review.helpful})
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <ThumbsDown className="w-4 h-4 mr-2" /> Not Helpful (
-                    {review.notHelpful})
-                  </Button>
-                </div>
-                <Button variant="link">See Replies ({review.replies})</Button>
-              </div>
+              <p className="mb-4 text-gray-600">{review.comment}</p>
+              <div className="flex items-center justify-between"></div>
             </CardContent>
           </Card>
         ))}

@@ -31,7 +31,9 @@ async function seed() {
     const item = await prisma.item.create({
       data: {
         name: faker.commerce.productName(),
-        rent_price: parseInt(faker.commerce.price(), 10),
+        rent_price: parseInt(
+          faker.commerce.price({ min: 1000000, max: 10000000 })
+        ),
         pickup_location: faker.location.city(),
         description: faker.lorem.sentence({ min: 20, max: 75 }),
         condition: faker.helpers.arrayElement([
@@ -41,6 +43,7 @@ async function seed() {
           "Used",
           "Fair",
         ]),
+        available: faker.datatype.boolean(),
         item_amount: faker.number.int({ min: 1, max: 10 }),
         image_url: faker.image.urlPicsumPhotos(),
         owner_id: randomUser.id,
