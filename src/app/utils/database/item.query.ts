@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma"
-import type { Prisma } from "@prisma/client"
+import { Prisma } from "@prisma/client"
 import { v2 as cloudinary } from "cloudinary"
 
 
