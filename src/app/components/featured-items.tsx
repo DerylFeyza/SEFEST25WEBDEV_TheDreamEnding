@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const featuredItems = [
   {
@@ -50,7 +51,9 @@ export function FeaturedItems() {
               <p className="text-sm text-gray-600">{item.description}</p>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Rent Now</Button>
+              <Link href="/rentals">
+                <Button>Rent Now</Button>
+              </Link>
             </CardFooter>
           </Card>
         ))}

@@ -3,64 +3,51 @@
 import { revalidatePath } from "next/cache"
 import { createItem, updateItem, findItem, deleteItem } from "../database/item.query"
 import { handleImageDelete, imageUploader } from "./imageUpload"
-import type { Prisma } from "@prisma/client"
 
 export const handleCreateItem = async (formData: FormData) => {
-  return new Promise(async (resolve) => {
     try {
-        const item: Prisma.ItemCreateInput = {
-          name: formData.get("name") as string,
-          description: formData.get("description") as string,
-          condition: formData.get("condition") as string,
-          owner: { connect: { id: Number.parseInt(formData.get("ownerId") as string) } },
+      const itemData = {
+        name: formData.get("name") as string,
+        description: formData.get("description") as string,
+        rent_price: parseInt(formData.get("rent_price") as string),
+        condition: formData.get("condition") as string,
+        pickup_location: formData.get("pickup_location") as string,
+        available: formData.get("available") === "true",
+        image_url: formData.get("image") as string,
+        owner: {
+          connect: { id: formData.get("owner_id") as string }
         }
-
-      const image = formData.get("image") as File
-
-      if (!image) {
-        return resolve({
-          success: false,
-          message: "Image is required",
-        })
       }
 
-      const uploadResult = await imageUploader(image)
-      if (!uploadResult.success) {
-        return resolve({ success: false, message: uploadResult.message })
-      }
-
-      if (uploadResult.url) {
-        item.imageUrl = uploadResult.url
-      }
-
-      await createItem({
-        ...item,
-        owner: { connect: { id: Number.parseInt(formData.get("ownerId") as string) } },
-      })
-      revalidatePath("/items")
-      return resolve({ success: true, message: "Item added successfully" })
+      await createItem(itemData);
+      return { success: true, message: "Berhasil Menambahkan Item" };
     } catch (error) {
-      return resolve({ success: false, message: "Failed to add item" })
+      console.error("Error creating item:", error);
     }
-  })
-}
+  }
 
-export const handleUpdateItem = async (id: number, formData: FormData) => {
+export const handleUpdateItem = async (id: string, formData: FormData) => {
   return new Promise(async (resolve) => {
     try {
       let uploadResult
       const image = formData.get("image") as File | null
       const existingItem = await findItem({ id })
 
-      const updateData: Prisma.ItemUpdateInput = {
+      const updateData = {
         name: formData.get("name") as string,
         description: formData.get("description") as string,
+        rent_price: parseInt(formData.get("rent_price") as string),
         condition: formData.get("condition") as string,
+        pickup_location: formData.get("pickup_location") as string,
         available: formData.get("available") === "true",
+        image_url: formData.get("image") as string,
+        owner: {
+          connect: { id: formData.get("owner_id") as string }
+        }
       }
 
-      if (existingItem?.imageUrl && image) {
-        const deleteResult = await handleImageDelete(existingItem.imageUrl)
+      if (existingItem?.image_url && image) {
+        const deleteResult = await handleImageDelete(existingItem.image_url)
         if (!deleteResult.success) {
           return resolve({ success: false, message: deleteResult.message })
         }
@@ -71,7 +58,7 @@ export const handleUpdateItem = async (id: number, formData: FormData) => {
       }
 
       if (uploadResult?.url) {
-        updateData.imageUrl = uploadResult.url
+        updateData.image_url = uploadResult.url
       }
 
       await updateItem({ id }, updateData)
@@ -83,12 +70,12 @@ export const handleUpdateItem = async (id: number, formData: FormData) => {
   })
 }
 
-export const handleDeleteItem = async (id: number) => {
+export const handleDeleteItem = async (id: string) => {
   return new Promise(async (resolve) => {
     try {
       const item = await findItem({ id })
-      if (item && item.imageUrl) {
-        const deleteResult = await handleImageDelete(item.imageUrl)
+      if (item && item.image_url) {
+        const deleteResult = await handleImageDelete(item.image_url)
         if (!deleteResult.success) {
           return resolve({ success: false, message: deleteResult.message })
         }
