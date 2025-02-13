@@ -26,7 +26,7 @@ export const handleCreateItem = async (formData: FormData) => {
     }
   }
 
-export const handleUpdateItem = async (id: number, formData: FormData) => {
+export const handleUpdateItem = async (id: string, formData: FormData) => {
   return new Promise(async (resolve) => {
     try {
       let uploadResult
@@ -46,8 +46,8 @@ export const handleUpdateItem = async (id: number, formData: FormData) => {
         }
       }
 
-      if (existingItem?.imageUrl && image) {
-        const deleteResult = await handleImageDelete(existingItem.imageUrl)
+      if (existingItem?.image_url && image) {
+        const deleteResult = await handleImageDelete(existingItem.image_url)
         if (!deleteResult.success) {
           return resolve({ success: false, message: deleteResult.message })
         }
@@ -70,12 +70,12 @@ export const handleUpdateItem = async (id: number, formData: FormData) => {
   })
 }
 
-export const handleDeleteItem = async (id: number) => {
+export const handleDeleteItem = async (id: string) => {
   return new Promise(async (resolve) => {
     try {
       const item = await findItem({ id })
-      if (item && item.imageUrl) {
-        const deleteResult = await handleImageDelete(item.imageUrl)
+      if (item && item.image_url) {
+        const deleteResult = await handleImageDelete(item.image_url)
         if (!deleteResult.success) {
           return resolve({ success: false, message: deleteResult.message })
         }
