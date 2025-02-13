@@ -6,10 +6,10 @@ import { encrypt } from "../bcrypt";
 interface userField {
 	name: string;
 	email: string;
-	password?: string;
+	password: string;
 }
 
-export const handleCreateUser = async (formData: FormData) => {
+export const handleUserSignup = async (formData: FormData) => {
 	try {
 		const hashedPassword = await encrypt(formData.get("password") as string);
 		const userData = {
