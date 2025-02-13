@@ -1,20 +1,17 @@
-import { Button } from "@heroui/react";
+import { Button } from "@/components/ui/button";
 
-export default function CallToAction() {
+export function CallToAction() {
   return (
-    <section className="my-8 text-center">
-      <h2 className="text-2xl font-bold mb-4 text-green-800">
-        Join Our Sustainable Community
+    <section className="bg-green-100 p-8 rounded-lg text-center mb-8">
+      <h2 className="text-2xl font-bold mb-4">
+        Join the Sustainable Rental Movement
       </h2>
-      <p className="mb-4">
-        Start renting, reduce waste, and make a positive impact on the
-        environment.
+      <p className="mb-6">
+        Reduce waste and save money by renting instead of buying.
       </p>
       <div className="flex justify-center space-x-4">
-        <Button color="primary" size="lg">
-          Rent Now
-        </Button>
-        <Button color="secondary" size="lg">
+        <Button size="lg">Rent Now</Button>
+        <Button size="lg" variant="outline">
           List Your Item
         </Button>
       </div>
