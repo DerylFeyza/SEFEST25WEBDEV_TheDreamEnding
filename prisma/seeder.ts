@@ -32,7 +32,7 @@ async function seed() {
       data: {
         name: faker.commerce.productName(),
         rent_price: parseInt(
-          faker.commerce.price({ min: 1000000, max: 10000000 })
+          faker.commerce.price({ min: 1000000, max: 10000000 }),
         ),
         pickup_location: faker.location.city(),
         description: faker.lorem.sentence({ min: 20, max: 75 }),
@@ -42,6 +42,15 @@ async function seed() {
           "Good",
           "Used",
           "Fair",
+        ]),
+        category: faker.helpers.arrayElement([
+          "Electronics",
+          "Clothing",
+          "Books",
+          "Toys",
+          "Music",
+          "Sports",
+          "Other",
         ]),
         available: faker.datatype.boolean(),
         item_amount: faker.number.int({ min: 1, max: 10 }),

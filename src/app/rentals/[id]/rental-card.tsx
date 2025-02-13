@@ -23,7 +23,7 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
   useEffect(() => {
     const layoutHeader = document.getElementById("layout-header");
     if (layoutHeader) {
-      const height = layoutHeader.clientHeight;
+      const height = layoutHeader.clientHeight + 32;
       setLayoutHeaderHeight(height);
     }
   }, []);

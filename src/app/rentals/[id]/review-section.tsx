@@ -5,80 +5,32 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { FilterReviews } from "./filter-reviews";
 import { Review, User } from "@prisma/client";
+import { useRouter, useSearchParams } from "next/navigation";
 
-// Mock review data
-const mockReviews = [
-  {
-    id: 1,
-    author: "John Doe",
-    rating: 5,
-    date: "2 days ago",
-    content:
-      "Great mountain bike! It handled the trails perfectly and was very comfortable for long rides. Highly recommend renting this if you're planning a biking trip.",
-    helpful: 12,
-    notHelpful: 2,
-    replies: 3,
-  },
-  {
-    id: 2,
-    author: "Jane Smith",
-    rating: 4,
-    date: "1 week ago",
-    content:
-      "Very good bike, but the seat was a bit uncomfortable for long rides. Otherwise, it performed well on various terrains.",
-    helpful: 8,
-    notHelpful: 1,
-    replies: 1,
-  },
-  {
-    id: 3,
-    author: "Mike Johnson",
-    rating: 3,
-    date: "2 weeks ago",
-    content:
-      "Decent bike, but I've used better. The gears were a bit sticky, which made some climbs challenging.",
-    helpful: 5,
-    notHelpful: 3,
-    replies: 2,
-  },
-  {
-    id: 4,
-    author: "Sarah Lee",
-    rating: 5,
-    date: "3 weeks ago",
-    content:
-      "Absolutely loved this bike! It made my mountain biking experience so much better. Will definitely rent again.",
-    helpful: 15,
-    notHelpful: 0,
-    replies: 4,
-  },
-  {
-    id: 5,
-    author: "Chris Taylor",
-    rating: 2,
-    date: "1 month ago",
-    content:
-      "Disappointing experience. The bike had some mechanical issues that ruined my trip. Hope they improve their maintenance.",
-    helpful: 7,
-    notHelpful: 2,
-    replies: 5,
-  },
-];
 type ReviewWithUser = Review & { user: User };
 
 export function ReviewSection({ reviews }: { reviews: ReviewWithUser[] }) {
-  console.log(reviews);
-
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [filteredRating, setFilteredRating] = useState<number | null>(null);
 
   const filteredReviews = filteredRating
     ? reviews.filter((review) => review.rating === filteredRating)
     : reviews;
-
+  const handleFilterChange = (rating: number | null) => {
+    setFilteredRating(rating);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    if (rating) {
+      newSearchParams.set("rating", rating.toString());
+    } else {
+      newSearchParams.delete("rating");
+    }
+    router.push(`?${newSearchParams.toString()}`, { scroll: false });
+  };
   return (
     <div className="mt-8">
       <h2 className="mb-4 text-2xl font-semibold">Customer Reviews</h2>
-      <FilterReviews onFilterChange={setFilteredRating} />
+      <FilterReviews onFilterChange={handleFilterChange} />
       <div className="mt-4 space-y-4">
         {filteredReviews.map((review) => (
           <Card key={review.id}>

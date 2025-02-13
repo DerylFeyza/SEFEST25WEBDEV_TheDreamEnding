@@ -2,27 +2,27 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
 export const getAllUser = async () => {
-	return await prisma.user.findMany({});
+  return await prisma.user.findMany({});
 };
 
 export const findUser = async (where: Prisma.UserWhereUniqueInput) => {
-	return await prisma.user.findUnique({
-		where: {
-			...where,
-		},
-	});
+  return await prisma.user.findUnique({
+    where: {
+      ...where,
+    },
+  });
 };
 
 export const createUser = async (data: Prisma.UserCreateInput) => {
-	return await prisma.user.create({ data });
+  return await prisma.user.create({ data });
 };
 
 export const updateUser = async (
-	where: Prisma.UserWhereUniqueInput,
-	data: Prisma.UserUpdateInput
+  where: Prisma.UserWhereUniqueInput,
+  data: Prisma.UserUpdateInput,
 ) => {
-	return await prisma.user.update({
-		where,
-		data,
-	});
+  return await prisma.user.update({
+    where,
+    data,
+  });
 };
