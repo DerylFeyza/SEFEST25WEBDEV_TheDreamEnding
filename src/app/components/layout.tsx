@@ -5,7 +5,7 @@ import type React from "react";
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <div className=" flex-grow p-4 mx-auto">
+      <div className=" flex-grow p-4">
         <div className="relative mb-6">
           <Input
             type="search"
@@ -16,11 +16,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
         {children}
       </div>
-      <footer className="p-4 mt-8 text-white bg-green-800">
-        <div className=" mx-auto text-center">
-          <p>&copy; 2025 EcoRent. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

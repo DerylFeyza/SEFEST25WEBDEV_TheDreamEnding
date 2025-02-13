@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,11 @@ export default function RootLayout({
     <html lang="en" data-theme="light" className="light">
       <NextAuthProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col `}
         >
           <Header />
-          {children}
+          <main className="px-8">{children}</main>
+          <Footer />
           <Toaster />
         </body>
       </NextAuthProvider>
