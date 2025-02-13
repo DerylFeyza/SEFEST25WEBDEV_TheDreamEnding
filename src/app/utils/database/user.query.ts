@@ -19,7 +19,17 @@ export const createUser = async (data: Prisma.UserCreateInput) => {
 
 export const updateUser = async (
   where: Prisma.UserWhereUniqueInput,
-  data: Prisma.UserUpdateInput,
+  data: Prisma.UserUpdateInput
+) => {
+  return await prisma.user.update({
+    where,
+    data,
+  });
+};
+
+export const resetPassword = async (
+  where: Prisma.UserWhereUniqueInput,
+  data: Prisma.UserUpdateInput
 ) => {
   return await prisma.user.update({
     where,

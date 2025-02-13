@@ -32,7 +32,7 @@ async function seed() {
       data: {
         name: faker.commerce.productName(),
         rent_price: parseInt(
-          faker.commerce.price({ min: 1000000, max: 10000000 }),
+          faker.commerce.price({ min: 1000000, max: 10000000 })
         ),
         pickup_location: faker.location.city(),
         description: faker.lorem.sentence({ min: 20, max: 75 }),
@@ -54,7 +54,7 @@ async function seed() {
         ]),
         available: faker.datatype.boolean(),
         item_amount: faker.number.int({ min: 1, max: 10 }),
-        image_url: faker.image.urlPicsumPhotos(),
+        image_url: faker.image.urlLoremFlickr(),
         owner_id: randomUser.id,
       },
     });
