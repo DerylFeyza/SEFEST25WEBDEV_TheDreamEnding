@@ -1,13 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { createUser } from "../database/user.query";
-import { encrypt } from "../bcrypt";
-
-interface userField {
-  name: string;
-  email: string;
-  password: string;
-}
+import { createUser, resetPassword, updateUser } from "../database/user.query";
+import { compareHash, encrypt } from "../bcrypt";
 
 export const handleUserSignup = async (formData: FormData) => {
   try {
@@ -31,4 +25,43 @@ export const handleUserSignup = async (formData: FormData) => {
     }
     return { success: false, message: "Gagal membuat user" };
   }
+};
+
+export const handleUpdateUser = async (id: string, data: FormData) => {
+  const name = data.get("name") as string;
+  const email = data.get("email") as string | null;
+
+  const updateData: { name: string; email?: string } = {
+    name: name,
+  };
+
+  if (email) {
+    updateData.email = email;
+  }
+  const response = await updateUser({ id }, updateData);
+  revalidatePath("/");
+  return response;
+};
+
+export const handleResetPassword = async (
+  id: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  const password = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      password: true,
+    },
+  });
+  if (!password) {
+    return { message: "an unexpected error occured", success: false };
+  }
+  const passwordMatch = await compareHash(oldPassword, password.password!);
+  if (!passwordMatch) {
+    return { message: "Password Do Not Match!", success: false };
+  }
+  const newPasswordHashed = await encrypt(newPassword);
+  const response = await resetPassword({ id }, { password: newPasswordHashed });
+  return { message: "Password Reset Successfull!", success: true, response };
 };
