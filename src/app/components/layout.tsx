@@ -5,19 +5,19 @@ import type React from "react";
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="container mx-auto p-4 flex-grow">
+      <div className=" flex-grow p-4 mx-auto">
         <div className="relative mb-6">
           <Input
             type="search"
             placeholder="Search for items..."
-            className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-green-500 focus:outline-none focus:border-green-700"
+            className="focus:outline-none focus:border-green-700 w-full py-2 pl-10 pr-4 border-2 border-green-500 rounded-full"
           />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Search className="left-3 top-1/2 absolute text-gray-400 transform -translate-y-1/2" />
         </div>
         {children}
       </div>
-      <footer className="bg-green-800 text-white p-4 mt-8">
-        <div className="container mx-auto text-center">
+      <footer className="p-4 mt-8 text-white bg-green-800">
+        <div className=" mx-auto text-center">
           <p>&copy; 2025 EcoRent. All rights reserved.</p>
         </div>
       </footer>
