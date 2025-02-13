@@ -22,7 +22,7 @@ export default function RentPage() {
   };
 
   return (
-    <div className="container px-4 mx-auto">
+    <div className="container p-4 mx-auto">
       <div className="md:grid-cols-3 grid grid-cols-1 gap-8">
         <div className="md:col-span-2">
           <div className="md:grid-cols-2 grid gap-6">
