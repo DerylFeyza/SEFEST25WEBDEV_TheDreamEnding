@@ -6,21 +6,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ItemDetails } from "./item-details";
 import { RentalCard } from "./rental-card";
 import { ReviewSection } from "./review-section";
-import { Item as rentItem } from "@prisma/client";
+import { Item as rentItem, Review, User } from "@prisma/client";
+type ReviewWithUser = Review & { user: User };
 
-export default function RentPage({ rentItems }: { rentItems: rentItem }) {
+export default function RentPage({
+  rentItems,
+}: {
+  rentItems: {
+    reviews: ReviewWithUser[];
+  } & rentItem;
+}) {
   const [items, setItems] = useState(1);
-
-  const itemDetails = {
-    name: "Mountain Bike",
-    description: "High-performance mountain bike suitable for all terrains.",
-    price: 125000,
-    discount: 10,
-    condition: "Excellent",
-    minimumRental: "1 day",
-    category: "Outdoor Equipment",
-    stock: 5,
-  };
 
   return (
     <div className="container p-4 mx-auto">
@@ -37,7 +33,7 @@ export default function RentPage({ rentItems }: { rentItems: rentItem }) {
                 className="object-cover rounded-lg"
               />
             </div>
-            <ItemDetails item={itemDetails} />
+            <ItemDetails item={rentItems} />
           </div>
 
           <Tabs defaultValue="description" className="mt-8">
@@ -66,11 +62,11 @@ export default function RentPage({ rentItems }: { rentItems: rentItem }) {
             </TabsContent>
           </Tabs>
 
-          <ReviewSection />
+          <ReviewSection reviews={rentItems.reviews!} />
         </div>
 
         <div className="md:col-span-1">
-          <RentalCard item={itemDetails} items={items} setItems={setItems} />
+          <RentalCard item={rentItems} items={items} setItems={setItems} />
         </div>
       </div>
     </div>

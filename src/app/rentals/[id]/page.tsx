@@ -8,9 +8,11 @@ export default async function page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  console.log(id);
 
   const result = await getItemsByID(id);
-
-  return <RentPage rentItems={result!} />;
+  console.log(result);
+  if (!result) {
+    return <div>Item not found</div>;
+  }
+  return <RentPage rentItems={result} />;
 }
