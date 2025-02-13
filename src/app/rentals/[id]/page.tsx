@@ -1,6 +1,6 @@
 import React from "react";
 import RentPage from "./rent-page";
-import { getItemsByID } from "@/services/Items";
+import { getItemsByID } from "@/app/utils/actions/item";
 
 export default async function page({
   params,
