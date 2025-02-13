@@ -5,8 +5,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Header() {
   return (
-    <header className="bg-green-800 text-white p-4 sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center">
+    <header
+      id="layout-header"
+      className="sticky top-0 z-50 p-4 text-white bg-green-800"
+    >
+      <div className="container flex items-center justify-between mx-auto">
         <Link href="/" className="text-2xl font-bold">
           EcoRent
         </Link>
