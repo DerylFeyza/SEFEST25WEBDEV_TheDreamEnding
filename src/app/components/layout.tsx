@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import type React from "react"; // Added import for React
+import type React from "react";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +13,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Link href="/" className="text-2xl font-bold">
             EcoRent
           </Link>
-          <nav className="hidden md:flex space-x-4">
+          <nav
+            className={cn(
+              "hidden md:flex justify-center items-center space-x-4 "
+            )}
+          >
             <Link href="/" className="hover:text-green-300">
               Home
             </Link>
@@ -26,6 +32,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Link>
             <Link href="/contact" className="hover:text-green-300">
               Contact Us
+            </Link>
+            <Link href="/profile" className="">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>nigger</AvatarFallback>
+              </Avatar>
             </Link>
           </nav>
         </div>
