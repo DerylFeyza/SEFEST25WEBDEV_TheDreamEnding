@@ -32,6 +32,7 @@ model Item {
   name            String
   rent_price      Int
   pickup_location String
+  category        String
   description     String?
   condition       String?
   image_url       String?
