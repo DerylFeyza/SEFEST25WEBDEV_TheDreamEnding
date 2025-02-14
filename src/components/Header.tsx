@@ -34,11 +34,12 @@ export function Header() {
     <nav className="sticky top-0 z-[999] mx-auto flex w-full flex-col lg:relative bg-green-50">
       <div
         className={cn(
-          "z-[999] mx-auto flex w-full origin-left bg-green-200 lg:bg-green-800 p-4 lg:bg-transparent justify-between",
-          scrolled && "justify-center bg-transparent"
+          "mx-auto flex w-full origin-left py-4 px-12 bg-transparent justify-between",
+          scrolled && "justify-center",
+          isExpanded ? "z-[100]" : "z-[900]"
         )}
       >
-        <Link href={"/"} className=" flex items-center justify-center">
+        <Link href={"/"} className="lg:flex items-center justify-center hidden">
           <Image
             src={"https://picsum.photos/50/120"}
             alt="Logo EcoRent"
@@ -47,12 +48,21 @@ export function Header() {
             className=" pointer-events-none h-[50px] w-[120px] "
           />
         </Link>
+        <button
+          className="lg:hidden block -ml-8"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <Menu
+            color="#ffffff"
+            className="hover:opacity-50 stroke-green-800 h-full w-[40px]"
+          />
+        </button>
         <div
           className={cn(
-            `flex items-center w-full justify-between transition-all duration-300 z-50 rounded-xl  p-2 `,
+            `lg:flex hidden items-center w-full justify-between transition-all duration-300 z-40 rounded-xl p-2`,
             scrolled
-              ? "lg:max-w-screen-lg max-w-4xl fixed top-5 border-[0.5px] border-green-500 shadow-md bg-green-800"
-              : "max-w-[640px]"
+              ? "max-w-[80dvw] fixed top-5 border-[0.5px] border-green-500 shadow-md bg-green-800"
+              : "max-w-3xl"
           )}
         >
           {scrolled && (
@@ -94,35 +104,49 @@ export function Header() {
             </Avatar>
           </Link>
         </div>
-        <button
-          className="lg:hidden block"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <Menu color="#ffffff" className="stroke-green-800  h-full w-[40px]" />
-        </button>
       </div>
 
-      {/* This Just for Testing */}
+      {/* Sidebar */}
+
       <div
         className={cn(
-          `z-[800] block h-fit w-full bg-green-800 transition-all duration-500 lg:hidden ${
-            isExpanded ? "mt-0" : "-mt-96"
-          }`
+          `fixed top-0 left-0 z-[800] h-full w-full lg:hidden transition-all duration-500`
         )}
       >
-        <div className="my-[21px] flex flex-col items-start justify-start gap-2 px-4 text-start sm:px-20 lg:ms-[52px]">
-          {menus.map((navOption) => (
-            <Link
-              key={navOption.title}
-              href={navOption.href}
-              className={cn(
-                `hover:text-green-300 rounded-xl text-center text-xl text-white transition-all duration-300`
-              )}
-              onClick={() => setIsExpanded(false)}
-            >
-              {navOption.title}
-            </Link>
-          ))}
+        {isExpanded && (
+          <div
+            className="fixed top-0 left-0 z-[799] h-full w-full bg-black/50 backdrop-blur-sm"
+            onClick={() => setIsExpanded(false)}
+          />
+        )}
+        <div
+          className={cn(
+            `z-[800] fixed top-0 left-0 h-full w-fit bg-green-800 transition-transform duration-500`,
+            isExpanded ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <div className="text-start flex flex-col items-start justify-start gap-2 pl-4 pr-16 my-4">
+            <button>
+              <Menu
+                onClick={() => setIsExpanded(false)}
+                className="stroke-green-600 hover:opacity-50"
+                width={40}
+                height={40}
+              />
+            </button>
+            {menus.map((navOption) => (
+              <Link
+                key={navOption.title}
+                href={navOption.href}
+                className={cn(
+                  `hover:text-green-300 rounded-xl text-center text-xl text-white transition-all duration-300`
+                )}
+                onClick={() => setIsExpanded(false)}
+              >
+                {navOption.title}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </nav>
