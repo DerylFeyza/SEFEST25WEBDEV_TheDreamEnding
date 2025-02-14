@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CalendarDays, Clock, HandCoins, BaggageClaim } from 'lucide-react';
 import { RentalStatus } from '@prisma/client';
 import { RentalWithRenter } from '@/types/entities';
+import { getDaysDifference } from '@/helper/days-diff';
 import {
   Card,
   CardContent,
@@ -23,9 +24,6 @@ export function RentalRequestCard({ rent }: { rent: RentalWithRenter }) {
     cancelled: 'bg-red-100 text-red-800'
   };
 
-  const diffInMs = rent.finished_date.getTime() - rent.start_date.getTime();
-  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
   return (
     <div className='container mx-auto flex flex-col space-y-4 p-4'>
       <Card className='w-full'>
@@ -42,21 +40,32 @@ export function RentalRequestCard({ rent }: { rent: RentalWithRenter }) {
           <CardDescription>{rent.User.email}</CardDescription>
         </CardHeader>
         <CardContent className='space-y-3'>
-          <div className='flex  justify-between'>
-            <div className='items-center space-x-2'>
+          <div className='flex justify-between'>
+            <div className='items-center space-x-2 flex flex-row'>
               <Clock className='h-4 w-4 text-muted-foreground' />
               <span>Rent Duration: </span>
             </div>
-            <span>{diffInDays}</span>
+            <span>
+              {getDaysDifference(rent.start_date, rent.finished_date)} Days
+            </span>
           </div>
 
-          <div className='flex items-center space-x-2'>
-            <CalendarDays className='h-4 w-4 text-muted-foreground' />
-            <span>Rent Date: </span>
+          <div className='flex justify-between'>
+            <div className='items-center space-x-2 flex flex-row'>
+              <CalendarDays className='h-4 w-4 text-muted-foreground' />
+              <span>Rent Date: </span>
+            </div>
+            <span>
+              {rent.start_date.toLocaleDateString()} -{' '}
+              {rent.finished_date.toLocaleDateString()}
+            </span>
           </div>
-          <div className='flex items-center space-x-2'>
-            <BaggageClaim className='h-4 w-4 text-muted-foreground' />
-            <span>Rent Amount: </span>
+          <div className='flex justify-between'>
+            <div className='items-center space-x-2 flex flex-row'>
+              <CalendarDays className='h-4 w-4 text-muted-foreground' />
+              <span>Rent Amount: </span>
+            </div>
+            <span>{rent.rent_amount}</span>
           </div>
           <div className='flex items-center space-x-2'>
             <HandCoins className='h-4 w-4 text-muted-foreground' />

@@ -13,8 +13,7 @@ import { useEffect, useState } from 'react';
 import { Item, Review } from '@prisma/client';
 import { handleCreateRental } from '@/app/utils/actions/rental';
 import { useSession } from 'next-auth/react';
-import { Input } from '@/components/ui/input';
-
+import { getDaysDifference } from '@/helper/days-diff';
 export interface RentalCardProps {
   item: Item & { reviews?: Review[] };
   items: number;
@@ -30,8 +29,8 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
     success: boolean;
     message: string;
   } | null>(null);
-  const [paidAmount, setPaidAmount] = useState(0);
   const { data: session } = useSession();
+  let duration = 1;
 
   useEffect(() => {
     const layoutHeader = document.getElementById('layout-header');
@@ -40,6 +39,10 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
       setLayoutHeaderHeight(height);
     }
   }, []);
+
+  if (startDate && endDate) {
+    duration = getDaysDifference(new Date(startDate), new Date(endDate));
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,6 +55,7 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
     }
 
     formData.set('user_id', session.user.id);
+    formData.set('rent_amount', items.toString());
     formData.set('item_id', item.id);
 
     const result = (await handleCreateRental(formData)) as {
@@ -137,7 +141,7 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
             {new Intl.NumberFormat('id-ID', {
               style: 'currency',
               currency: 'IDR'
-            }).format(items * item.rent_price)}
+            }).format(items * item.rent_price * duration)}
           </p>
           <div className='space-y-2'>
             <Button
@@ -146,21 +150,6 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
             >
               {item.available ? 'Rent Now' : 'This Item Is Not Available'}
             </Button>
-            {/* <Button
-            disabled={item.available ? false : true}
-            className="w-full"
-            variant="outline"
-          >
-            Add To Cart
-          </Button> */}
-            {/* TODO: Fix this temporary solution */}
-            <Input
-              type='number'
-              value={paidAmount}
-              name='paid_amount'
-              onChange={(e) => setPaidAmount(parseInt(e.target.value))}
-              placeholder={`Enter a minimum of ${item.rent_price}`}
-            />
           </div>
           {message && (
             <p

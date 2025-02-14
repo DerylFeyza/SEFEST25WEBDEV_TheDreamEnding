@@ -1,80 +1,68 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { findItemRentalCount } from '../database/item.query';
 import { createRental, updateRental } from '../database/rental.query';
 import type { Prisma, RentalStatus } from '@prisma/client';
-import prisma from '@/lib/prisma';
+import { getDaysDifference } from '@/helper/days-diff';
 
 export const handleCreateRental = async (formData: FormData) => {
-  return new Promise(async (resolve) => {
-    try {
-      const itemId = String(formData.get('item_id'));
-      const userId = String(formData.get('user_id'));
-
-      const user = await prisma.user.findUnique({
-        where: { id: userId }
-      });
-      if (!user) {
-        return resolve({
-          success: false,
-          message: 'User not found'
-        });
-      }
-
-      const startDate = new Date(formData.get('startDate') as string);
-      const endDate = new Date(formData.get('endDate') as string);
-      const paid_amount = Number(formData.get('paid_amount'));
-      if (endDate <= startDate) {
-        return resolve({
-          success: false,
-          message: 'End date must be after start date'
-        });
-      }
-
-      const item = await prisma.item.findUnique({
-        where: { id: itemId }
-      });
-
-      if (!item || !item.available || item.item_amount < 1) {
-        return resolve({
-          success: false,
-          message: 'Item is no longer available'
-        });
-      }
-
-      const rental: Prisma.RentalCreateInput = {
-        start_date: startDate,
-        finished_date: endDate,
-        status: 'PENDING',
-        item: { connect: { id: itemId } },
-        User: { connect: { id: userId } },
-        paid_amount
+  try {
+    const itemId = String(formData.get('item_id'));
+    const userId = String(formData.get('user_id'));
+    const startDate = new Date(formData.get('startDate') as string);
+    const endDate = new Date(formData.get('endDate') as string);
+    const rent_amount = Number(formData.get('rent_amount'));
+    if (endDate <= startDate) {
+      return {
+        success: false,
+        message: 'End date must be after start date'
       };
-
-      await createRental(rental);
-
-      if (item.item_amount === 1) {
-        await prisma.item.update({
-          where: { id: itemId },
-          data: { available: false, item_amount: 0 }
-        });
-      } else {
-        await prisma.item.update({
-          where: { id: itemId },
-          data: { item_amount: { decrement: 1 } }
-        });
-      }
-
-      revalidatePath('/rentals');
-      resolve({
-        success: true,
-        message: 'Rental request created successfully'
-      });
-    } catch (error) {
-      console.error(error);
-      resolve({ success: false, message: 'Failed to create rental request' });
     }
-  });
+
+    const daysDiff = getDaysDifference(startDate, endDate);
+
+    const item = await findItemRentalCount({
+      id: itemId
+    });
+
+    if (!item) {
+      return {
+        success: false,
+        message: 'This item doesnt exist'
+      };
+    }
+
+    if (
+      item.rental_counts.ongoing + item.rental_counts.confirmed >=
+      item.item_amount
+    ) {
+      return {
+        success: false,
+        message: 'Item is no longer available'
+      };
+    }
+
+    const rental: Prisma.RentalCreateInput = {
+      start_date: startDate,
+      finished_date: endDate,
+      status: 'PENDING',
+      item: { connect: { id: itemId } },
+      User: { connect: { id: userId } },
+      rent_amount: rent_amount,
+      paid_amount: item.rent_price * rent_amount * daysDiff
+    };
+
+    await createRental(rental);
+    revalidatePath('/', 'layout');
+    return {
+      success: true,
+      message: 'Rental request created successfully'
+    };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to create rental request' };
+  }
 };
 
 export const handleUpdateRental = async (id: string, formData: FormData) => {
