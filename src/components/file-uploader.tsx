@@ -8,7 +8,7 @@ import Dropzone, {
 	type FileRejection,
 } from "react-dropzone";
 import { toast } from "sonner";
-
+import { getFileNameFromUrl } from "@/helper/cloudinary-filename";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -59,6 +59,8 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
 	 */
 	accept?: DropzoneProps["accept"];
 
+	initialImageUrl?: string;
+
 	/**
 	 * Maximum file size for the uploader.
 	 * @type number | undefined
@@ -96,6 +98,7 @@ export function FileUploader(props: FileUploaderProps) {
 	const {
 		value: valueProp,
 		onValueChange,
+		initialImageUrl,
 		onUpload,
 		progresses,
 		accept = { "image/*": [] },
@@ -257,6 +260,8 @@ export function FileUploader(props: FileUploaderProps) {
 						))}
 					</div>
 				</ScrollArea>
+			) : initialImageUrl ? (
+				<InitialFileCard imageUrl={initialImageUrl} />
 			) : null}
 		</div>
 	);
@@ -305,6 +310,36 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
 					<CrossIcon className="size-4" aria-hidden="true" />
 					<span className="sr-only">Remove file</span>
 				</Button>
+			</div>
+		</div>
+	);
+}
+
+interface InitialFileCardProps {
+	imageUrl: string;
+}
+
+function InitialFileCard({ imageUrl }: InitialFileCardProps) {
+	return (
+		<div className="relative flex items-center space-x-4">
+			<div className="flex flex-1 space-x-4">
+				{imageUrl ? (
+					<Image
+						src={imageUrl}
+						alt={getFileNameFromUrl(imageUrl) as string}
+						width={150}
+						height={150}
+						loading="lazy"
+						className="aspect-square shrink-0 rounded-md object-cover"
+					/>
+				) : null}
+				<div className="flex w-full flex-col gap-2">
+					<div className="space-y-px">
+						<p className="line-clamp-1 text-sm font-medium text-foreground/80">
+							{getFileNameFromUrl(imageUrl) as string}
+						</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

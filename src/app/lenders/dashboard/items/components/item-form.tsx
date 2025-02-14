@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { handleCreateItem } from "@/app/utils/actions/item";
+import { handleCreateItem, handleUpdateItem } from "@/app/utils/actions/item";
 import { toast } from "sonner";
 
 import * as z from "zod";
@@ -87,7 +87,6 @@ export default function ItemForm({
 		location: initialData?.pickup_location || "",
 		description: initialData?.description || "",
 	};
-	console.log(initialData);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -113,13 +112,19 @@ export default function ItemForm({
 			formData.append("item_amount", values.amount.toString());
 			formData.append("condition", values.condition);
 			formData.append("pickup_location", values.location);
-			formData.append("owner_id", session?.user?.id);
 
 			if (values.image?.length > 0) {
 				formData.append("image", values.image[0]);
 			}
 
-			const result = await handleCreateItem(formData);
+			let result;
+			if (initialData) {
+				formData.append("image_url", initialData.image_url);
+				result = await handleUpdateItem(initialData.id, formData);
+			} else {
+				formData.append("owner_id", session?.user?.id);
+				result = await handleCreateItem(formData);
+			}
 
 			if (result.success) {
 				setLoading(false);
@@ -159,6 +164,7 @@ export default function ItemForm({
 										<FormLabel>Images</FormLabel>
 										<FormControl>
 											<FileUploader
+												initialImageUrl={initialData?.image_url}
 												value={field.value}
 												onValueChange={field.onChange}
 												maxFiles={1}
