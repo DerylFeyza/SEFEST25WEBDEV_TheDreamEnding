@@ -54,6 +54,7 @@ model Rental {
   user_id       String
   start_date    DateTime
   finished_date DateTime
+  paid_amount   Int
   status        RentalStatus @default(PENDING)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt

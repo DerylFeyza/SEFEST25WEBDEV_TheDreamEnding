@@ -30,3 +30,4 @@ export const updateRental = async (
 ) => {
   return await prisma.rental.update({ where, data });
 };
+
