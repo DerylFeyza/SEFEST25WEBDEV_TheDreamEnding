@@ -13,3 +13,7 @@ export type ItemWithRentalCounts = Item & { rental_counts: RentalCounts };
 export type RentalWithRenter = Prisma.RentalGetPayload<{
   include: { User: true };
 }>;
+
+export type RentWithItemAndOwner = Prisma.RentalGetPayload<{
+  include: { item: { include: { owner: true } } };
+}>;

@@ -8,8 +8,6 @@ export const getAllRentals = async ({
   where?: Prisma.RentalWhereInput;
   include?: Prisma.RentalInclude;
 }) => {
-  console.log(where);
-
   return await prisma.rental.findMany({
     where,
     include,
