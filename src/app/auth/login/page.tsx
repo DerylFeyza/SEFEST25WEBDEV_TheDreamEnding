@@ -9,8 +9,6 @@ export default async function Login() {
   }
 
   return (
-    <div className=" flex flex-grow">
       <LoginForm />
-    </div>
   );
 }

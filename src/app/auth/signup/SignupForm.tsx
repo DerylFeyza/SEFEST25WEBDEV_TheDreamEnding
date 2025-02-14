@@ -90,7 +90,7 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center flex-grow px-6 bg-green-100">
+    <div className="flex flex-col items-center justify-center flex-grow px-6">
       <Card className="w-full max-w-[400px]">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-green-800">

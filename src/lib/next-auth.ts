@@ -11,6 +11,7 @@ declare module "next-auth" {
       id: string;
       email: string;
       name: string;
+      image:string;
     };
   }
 }
@@ -104,6 +105,7 @@ export const authOptions: AuthOptions = {
         token.id = userdb.id;
         token.email = userdb.email;
         token.name = userdb.name;
+        token.picture = userdb.profile_picture_url;
       }
       return token;
     },
@@ -114,6 +116,7 @@ export const authOptions: AuthOptions = {
         session.user.id = userdb?.id as string;
         session.user.name = userdb?.name as string;
         session.user.email = userdb?.email as string;
+        session.user.image = userdb?.profile_picture_url as string;
       }
       return session;
     },

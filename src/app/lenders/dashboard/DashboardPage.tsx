@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -10,122 +10,109 @@ import {
   ClipboardList,
   DollarSign,
   Plus,
-  List,
-} from "lucide-react";
-import Link from "next/link";
-
+  List
+} from 'lucide-react';
+import Link from 'next/link';
+import { Item, Review, User } from '@prisma/client';
+import Image from 'next/image';
+import { formatToIDR } from '@/helper/formatToIDR';
+interface bestSeller {
+  bestSeller: Item[] & { reviews: Review[] & { user: User }[] }[];
+}
 const chartdata = [
-  { date: "2 Dec", Revenue: 15 },
-  { date: "3 Dec", Revenue: 25 },
-  { date: "4 Dec", Revenue: 35 },
-  { date: "5 Dec", Revenue: 50 },
-  { date: "6 Dec", Revenue: 30 },
-  { date: "7 Dec", Revenue: 65 },
+  { date: '2 Dec', Revenue: 15 },
+  { date: '3 Dec', Revenue: 25 },
+  { date: '4 Dec', Revenue: 35 },
+  { date: '5 Dec', Revenue: 50 },
+  { date: '6 Dec', Revenue: 30 },
+  { date: '7 Dec', Revenue: 65 }
 ];
 
-const products = [
-  {
-    name: "Wooden Chair",
-    price: "$29.99",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-K9sHCbV1qaTz1Ej6SulIBpovyb7PVk.png",
-  },
-  {
-    name: "Dinning Chair",
-    price: "$35.99",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-K9sHCbV1qaTz1Ej6SulIBpovyb7PVk.png",
-  },
-  {
-    name: "Eames Chairs",
-    price: "$42.99",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-K9sHCbV1qaTz1Ej6SulIBpovyb7PVk.png",
-  },
-];
 
-export default function DashboardPage() {
+export default function DashboardPage({ bestSeller }: bestSeller) {
+  console.log(bestSeller);
+
   return (
-    <div className="bg-background min-h-screen p-6 space-y-6">
+    <div className='bg-background min-h-screen p-6 space-y-6'>
       {/* Stats Cards */}
-      <div className="md:grid-cols-4 grid grid-cols-1 gap-4">
-        <Card className="bg-primary text-primary-foreground p-4">
-          <div className="flex items-center justify-between">
+      <div className='md:grid-cols-4 grid grid-cols-1 gap-4'>
+        <Card className='bg-primary text-primary-foreground p-4'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="opacity-80 text-sm">Total sales</p>
-              <p className="text-2xl font-bold">321k</p>
+              <p className='opacity-80 text-sm'>Total sales</p>
+              <p className='text-2xl font-bold'>321k</p>
             </div>
-            <DollarSign className="opacity-80" />
+            <DollarSign className='opacity-80' />
           </div>
         </Card>
-        <Card className="bg-primary text-primary-foreground p-4">
-          <div className="flex items-center justify-between">
+        <Card className='bg-primary text-primary-foreground p-4'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="opacity-80 text-sm">Visitor</p>
-              <p className="text-2xl font-bold">678k</p>
+              <p className='opacity-80 text-sm'>Visitor</p>
+              <p className='text-2xl font-bold'>678k</p>
             </div>
-            <Users className="opacity-80" />
+            <Users className='opacity-80' />
           </div>
         </Card>
-        <Card className="bg-primary text-primary-foreground p-4">
-          <div className="flex items-center justify-between">
+        <Card className='bg-primary text-primary-foreground p-4'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="opacity-80 text-sm">Cvr</p>
-              <p className="text-2xl font-bold">7.89</p>
+              <p className='opacity-80 text-sm'>Cvr</p>
+              <p className='text-2xl font-bold'>7.89</p>
             </div>
-            <Filter className="opacity-80" />
+            <Filter className='opacity-80' />
           </div>
         </Card>
-        <Card className="bg-primary text-primary-foreground p-4">
-          <div className="flex items-center justify-between">
+        <Card className='bg-primary text-primary-foreground p-4'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="opacity-80 text-sm">Total orders</p>
-              <p className="text-2xl font-bold">211k</p>
+              <p className='opacity-80 text-sm'>Total orders</p>
+              <p className='text-2xl font-bold'>211k</p>
             </div>
-            <ClipboardList className="opacity-80" />
+            <ClipboardList className='opacity-80' />
           </div>
         </Card>
       </div>
 
       {/* Main Content */}
-      <div className="md:grid-cols-2 grid gap-6">
+      <div className='md:grid-cols-2 grid gap-6'>
         {/* Chart */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
+        <Card className='p-6'>
+          <div className='flex items-start justify-between mb-4'>
             <div>
-              <h2 className="text-lg font-semibold">Summary Revenue</h2>
-              <p className="text-muted-foreground text-sm">
+              <h2 className='text-lg font-semibold'>Summary Revenue</h2>
+              <p className='text-muted-foreground text-sm'>
                 Last update last week
               </p>
             </div>
-            <div className="flex gap-2">
-              <span className="text-primary flex items-center gap-1 text-sm">
-                <ArrowUpRight className="w-4 h-4" /> 23.22%
+            <div className='flex gap-2'>
+              <span className='text-primary flex items-center gap-1 text-sm'>
+                <ArrowUpRight className='w-4 h-4' /> 23.22%
               </span>
-              <span className="text-destructive text-sm">3.31%</span>
+              <span className='text-destructive text-sm'>3.31%</span>
             </div>
           </div>
-          <div className="h-[200px] mt-4"></div>
+          <div className='mt-4 h-[200px]'></div>
         </Card>
 
         {/* Right Side Content */}
-        <div className="space-y-6">
+        <div className='space-y-6'>
           {/* Product Actions */}
-          <Card className="bg-accent p-6">
-            <div className="space-y-4">
-              <h3 className="text-accent-foreground text-lg font-semibold">
+          <Card className='bg-accent p-6'>
+            <div className='space-y-4'>
+              <h3 className='text-accent-foreground text-lg font-semibold'>
                 Product Management
               </h3>
-              <div className="lg:flex-row flex flex-col gap-4">
-                <Button className="flex-1">
-                  <Plus className="w-4 h-4 mr-2" />
-                  <Link href="/lenders/dashboard/items/add">
+              <div className='lg:flex-row flex flex-col gap-4'>
+                <Button className='flex-1'>
+                  <Plus className='w-4 h-4 mr-2' />
+                  <Link href='/lenders/dashboard/items/add'>
                     Add New Product
                   </Link>
                 </Button>
-                <Button variant="outline" className="flex-1" asChild>
-                  <Link href="/lenders/dashboard/items">
-                    <List className="w-4 h-4 mr-2" /> View All Products
+                <Button variant='outline' className='flex-1' asChild>
+                  <Link href='/lenders/dashboard/items'>
+                    <List className='w-4 h-4 mr-2' /> View All Products
                   </Link>
                 </Button>
               </div>
@@ -133,18 +120,26 @@ export default function DashboardPage() {
           </Card>
 
           {/* Best Seller */}
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold">Best Seller</h3>
-              <ArrowRight className="text-muted-foreground w-5 h-5" />
+          <Card className='p-6'>
+            <div className='flex items-center justify-between mb-6'>
+              <h3 className='text-lg font-semibold'>Best Seller</h3>
+              <ArrowRight className='text-muted-foreground w-5 h-5' />
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              {products.map((product, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="aspect-square bg-muted rounded-lg"></div>
-                  <h4 className="text-sm font-medium">{product.name}</h4>
-                  <p className="text-muted-foreground text-sm">
-                    {product.price}
+            <div className='grid grid-cols-3 gap-4'>
+              {bestSeller.map((product, index) => (
+                <div key={index} className='space-y-2'>
+                  <div className='aspect-square bg-muted rounded-lg'>
+                    <Image
+                      src={product.image_url}
+                      alt={product.name}
+                      width={200}
+                      height={200}
+                      className='h-[200px] w-[200px] rounded-lg object-cover'
+                    />
+                  </div>
+                  <h4 className='text-sm font-medium'>{product.name}</h4>
+                  <p className='text-muted-foreground text-sm'>
+                    {formatToIDR(product.rent_price)}
                   </p>
                 </div>
               ))}

@@ -48,8 +48,8 @@ export default function LoginForm() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center flex-grow px-4 bg-green-100">
-      <Card className="w-full max-w-[400px]">
+    <div className=" flex flex-col items-center justify-center px-4">
+      <Card className="w-full max-w-[400px] ">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-green-800">
             Login
@@ -110,6 +110,6 @@ export default function LoginForm() {
           </div>
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }

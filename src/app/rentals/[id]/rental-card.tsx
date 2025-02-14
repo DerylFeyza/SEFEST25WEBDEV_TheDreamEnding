@@ -18,7 +18,7 @@ export interface RentalCardProps {
   item: Item & { reviews?: Review[] };
   items: number;
   setItems: React.Dispatch<React.SetStateAction<number>>;
-  user: string;
+  user?: string;
 }
 
 export function RentalCard({ item, items, setItems }: RentalCardProps) {
@@ -69,7 +69,7 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
           
           <div className="space-y-2">
             <div>
-              <label className="block text-sm font-medium mb-1">Start Date</label>
+              <label className="block mb-1 text-sm font-medium">Start Date</label>
               <input
                 type="date"
                 name="startDate"
@@ -82,7 +82,7 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1">End Date</label>
+              <label className="block mb-1 text-sm font-medium">End Date</label>
               <input
                 type="date"
                 name="endDate"
