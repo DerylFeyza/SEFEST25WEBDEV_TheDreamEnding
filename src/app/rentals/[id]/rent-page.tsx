@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { ItemDetails } from "./item-details";
 import { RentalCard } from "./rental-card";
 import { ReviewSection } from "./review-section";
 import { Item as rentItem, Review, User } from "@prisma/client";
 type ReviewWithUser = Review & { user: User };
-
 export default function RentPage({
   rentItems,
 }: {
@@ -15,6 +15,7 @@ export default function RentPage({
     reviews: ReviewWithUser[];
   } & rentItem;
 }) {
+  const { data: session } = useSession();
   const [items, setItems] = useState(1);
 
   return (
@@ -38,7 +39,12 @@ export default function RentPage({
         </div>
 
         <div className="md:col-span-1">
-          <RentalCard item={rentItems} items={items} setItems={setItems} />
+          <RentalCard 
+            item={rentItems} 
+            items={items} 
+            setItems={setItems}
+            user={session?.user?.id}
+          />        
         </div>
       </div>
     </div>
