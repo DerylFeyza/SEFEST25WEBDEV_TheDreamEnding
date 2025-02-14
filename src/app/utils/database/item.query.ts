@@ -22,7 +22,7 @@ export const findAllItems = async ({
 			...(search?.name || search?.category
 				? {
 						OR: [
-							search.name ? { name: { contains: search.name } } : undefined,
+							search.name ? { name: { contains: search.name,mode:"insensitive" } } : undefined,
 							search.category
 								? { category: { contains: search.category } }
 								: undefined,

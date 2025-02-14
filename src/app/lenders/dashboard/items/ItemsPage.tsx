@@ -51,7 +51,6 @@ export default function ItemsPage({
               placeholder="Search products..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="max-w-sm"
             />
             <Button variant="outline" size="icon">
               <Search className="w-4 h-4" />
