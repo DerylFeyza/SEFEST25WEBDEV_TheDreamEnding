@@ -57,6 +57,49 @@ export function Header() {
             className="hover:opacity-50 stroke-green-800 h-full w-[40px]"
           />
         </button>
+        {/* Sidebar */}
+        <div
+          className={cn(
+            `fixed top-0 left-0 h-full transition-all duration-500 lg:hidden`,
+            isExpanded ? "z-[800]" : "z-0"
+          )}
+        >
+          {isExpanded && (
+            <div
+              className="fixed top-0 left-0 z-[799] h-full w-full bg-black/50 backdrop-blur-sm"
+              onClick={() => setIsExpanded(false)}
+            />
+          )}
+          <div
+            className={cn(
+              `z-[800] fixed top-0 left-0 h-full w-fit bg-green-800 transition-transform duration-500 `,
+              isExpanded ? "translate-x-0" : "-translate-x-full"
+            )}
+          >
+            <div className="text-start flex flex-col items-start justify-start gap-2 pl-4 pr-16 my-4">
+              <button>
+                <Menu
+                  onClick={() => setIsExpanded(false)}
+                  className="stroke-green-600 hover:opacity-50"
+                  width={40}
+                  height={40}
+                />
+              </button>
+              {menus.map((navOption) => (
+                <Link
+                  key={navOption.title}
+                  href={navOption.href}
+                  className={cn(
+                    `hover:text-green-300 rounded-xl text-center text-xl text-white transition-all duration-300`
+                  )}
+                  onClick={() => setIsExpanded(false)}
+                >
+                  {navOption.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
         <div
           className={cn(
             `lg:flex hidden items-center w-full justify-between transition-all duration-300 z-40 rounded-xl p-2`,
@@ -103,50 +146,6 @@ export function Header() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </Link>
-        </div>
-      </div>
-
-      {/* Sidebar */}
-
-      <div
-        className={cn(
-          `fixed top-0 left-0 z-[800] h-full w-full lg:hidden transition-all duration-500`
-        )}
-      >
-        {isExpanded && (
-          <div
-            className="fixed top-0 left-0 z-[799] h-full w-full bg-black/50 backdrop-blur-sm"
-            onClick={() => setIsExpanded(false)}
-          />
-        )}
-        <div
-          className={cn(
-            `z-[800] fixed top-0 left-0 h-full w-fit bg-green-800 transition-transform duration-500`,
-            isExpanded ? "translate-x-0" : "-translate-x-full"
-          )}
-        >
-          <div className="text-start flex flex-col items-start justify-start gap-2 pl-4 pr-16 my-4">
-            <button>
-              <Menu
-                onClick={() => setIsExpanded(false)}
-                className="stroke-green-600 hover:opacity-50"
-                width={40}
-                height={40}
-              />
-            </button>
-            {menus.map((navOption) => (
-              <Link
-                key={navOption.title}
-                href={navOption.href}
-                className={cn(
-                  `hover:text-green-300 rounded-xl text-center text-xl text-white transition-all duration-300`
-                )}
-                onClick={() => setIsExpanded(false)}
-              >
-                {navOption.title}
-              </Link>
-            ))}
-          </div>
         </div>
       </div>
     </nav>
