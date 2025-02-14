@@ -11,15 +11,23 @@ import {
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Item, Review } from "@prisma/client";
+import { handleCreateRental } from "@/app/utils/actions/rental";
+import { useSession } from "next-auth/react";
 
-interface RentalCardProps {
+export interface RentalCardProps {
   item: Item & { reviews?: Review[] };
   items: number;
   setItems: React.Dispatch<React.SetStateAction<number>>;
+  user: string;
 }
 
 export function RentalCard({ item, items, setItems }: RentalCardProps) {
   const [layoutHeaderHeight, setLayoutHeaderHeight] = useState(0);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [message, setMessage] = useState<{success: boolean; message: string} | null>(null);
+  const { data: session } = useSession();
+  
   useEffect(() => {
     const layoutHeader = document.getElementById("layout-header");
     if (layoutHeader) {
@@ -28,18 +36,67 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
     }
   }, []);
 
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    
+    if (!session?.user?.id) {
+      setMessage({ success: false, message: "Please log in to rent items" });
+      return;
+    }
+
+    formData.set("user_id", session.user.id);
+    formData.set("item_id", item.id);
+
+    const result = await handleCreateRental(formData) as { success: boolean; message: string };
+    setMessage(result);
+    
+    if (result.success) {
+      setStartDate("");
+      setEndDate("");
+    }
+  };
+
   return (
     <Card className={cn(" sticky")} style={{ top: layoutHeaderHeight }}>
       <CardHeader>
         <CardTitle>Rent This Item</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between mb-4">
-          <p className="font-semibold">{item.name}</p>
-        </div>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center border rounded-md">
-            <Button
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input type="hidden" name="item_id" value={item.id} />
+          
+          <div className="space-y-2">
+            <div>
+              <label className="block text-sm font-medium mb-1">Start Date</label>
+              <input
+                type="date"
+                name="startDate"
+                required
+                min={new Date().toISOString().split('T')[0]}
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">End Date</label>
+              <input
+                type="date"
+                name="endDate"
+                required
+                min={startDate || new Date().toISOString().split('T')[0]}
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between mb-4">
+          <Button
               onClick={() => setItems(Math.max(1, items - 1))}
               variant="ghost"
               className="text-xl"
@@ -59,12 +116,11 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
               +
             </Button>
           </div>
-          <div>
-            <p className="text-sm text-gray-600">
-              Available: {item.available ? "Yes" : "No"}
-            </p>
-            <p className="text-sm text-gray-600">Stock: {item.item_amount}</p>
-          </div>
+        <div>
+          <p className="text-sm text-gray-600">
+            Available: {item.available ? "Yes" : "No"}
+          </p>
+          <p className="text-sm text-gray-600">Stock: {item.item_amount}</p>
         </div>
         <p className="mb-4 text-lg font-bold">
           Total:{" "}
@@ -88,6 +144,14 @@ export function RentalCard({ item, items, setItems }: RentalCardProps) {
             Add To Cart
           </Button>
         </div>
+          {message && (
+            <p className={`text-sm ${
+              message.success ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {message.message}
+            </p>
+          )}
+        </form>
       </CardContent>
       <CardFooter className="justify-between">
         <Button variant="ghost" size="sm">

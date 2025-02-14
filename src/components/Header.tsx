@@ -41,7 +41,7 @@ export function Header() {
       >
         <Link href={"/"} className="lg:flex items-center justify-center hidden">
           <Image
-            src={"https://picsum.photos/50/120"}
+            src="/logo.png"
             alt="Logo EcoRent"
             height={50}
             width={120}
