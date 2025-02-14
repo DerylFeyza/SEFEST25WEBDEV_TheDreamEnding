@@ -1,4 +1,4 @@
-import { Item } from '@prisma/client';
+import { Item, Prisma } from '@prisma/client';
 
 type RentalCounts = {
   pending: number;
@@ -9,3 +9,7 @@ type RentalCounts = {
 };
 
 export type ItemWithRentalCounts = Item & { rental_counts: RentalCounts };
+
+export type RentalWithRenter = Prisma.RentalGetPayload<{
+  include: { User: true };
+}>;

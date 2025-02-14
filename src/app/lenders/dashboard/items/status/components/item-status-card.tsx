@@ -13,7 +13,6 @@ export default function ItemStatusCard({
 }: {
   item: ItemWithRentalCounts;
 }) {
-  console.log(item);
   return (
     <div className='container mx-auto flex flex-col space-y-4 p-4'>
       <div className='grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-8'>
