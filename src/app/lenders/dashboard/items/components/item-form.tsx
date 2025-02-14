@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { handleCreateItem } from "@/app/utils/actions/item";
+import { handleCreateItem, handleUpdateItem } from "@/app/utils/actions/item";
 import { toast } from "sonner";
 
 import * as z from "zod";
