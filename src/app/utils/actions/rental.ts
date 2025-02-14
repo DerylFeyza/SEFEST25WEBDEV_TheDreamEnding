@@ -66,19 +66,16 @@ export const handleCreateRental = async (formData: FormData) => {
 };
 
 export const handleUpdateRental = async (id: string, formData: FormData) => {
-  return new Promise(async (resolve) => {
-    try {
-      const updateData: Prisma.RentalUpdateInput = {
-        status: formData.get('status') as RentalStatus
-      };
+  try {
+    const updateData: Prisma.RentalUpdateInput = {
+      status: formData.get('status') as RentalStatus
+    };
+    await updateRental({ id: id }, updateData);
+    revalidatePath('/', 'layout');
+    return { success: true, message: 'Rental status updated successfully' };
+  } catch (error) {
+    console.error(error);
 
-      await updateRental({ id: id }, updateData);
-      revalidatePath('/rentals');
-      resolve({ success: true, message: 'Rental status updated successfully' });
-    } catch (error) {
-      console.error(error);
-
-      resolve({ success: false, message: 'Failed to update rental' });
-    }
-  });
+    return { success: false, message: 'Failed to update rental' };
+  }
 };
