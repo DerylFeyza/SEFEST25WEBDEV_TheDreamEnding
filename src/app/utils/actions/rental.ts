@@ -84,6 +84,8 @@ export const handleUpdateRental = async (id: string, formData: FormData) => {
       revalidatePath("/rentals");
       resolve({ success: true, message: "Rental status updated successfully" });
     } catch (error) {
+      console.error(error);
+      
       resolve({ success: false, message: "Failed to update rental" });
     }
   });

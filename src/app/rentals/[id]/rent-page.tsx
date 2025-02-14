@@ -43,7 +43,7 @@ export default function RentPage({
             item={rentItems} 
             items={items} 
             setItems={setItems}
-            user={session?.user?.id}
+            // user={session?.user?.id}
           />        
         </div>
       </div>

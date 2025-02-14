@@ -123,3 +123,34 @@ export const getItemsByID = async (
 		},
 	});
 };
+
+export const getAllItems = async (
+) => {
+	return await prisma.item.findMany({
+		include: {
+			reviews: {
+				include: {
+					user: true,
+				},
+			},
+		},
+	});
+};
+
+export const getBestSeller = async () => {
+	return await prisma.item.findMany({
+		include: {
+			reviews: {
+				include: {
+					user: true,					
+				},
+			},
+		},
+		orderBy: {
+			reviews: {
+				_count: "desc",
+			},
+		},
+		take: 3
+	});
+};

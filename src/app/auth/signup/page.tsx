@@ -9,8 +9,6 @@ export default async function Signup() {
   }
 
   return (
-    <div className="flex flex-grow">
       <SignupForm />
-    </div>
   );
 }

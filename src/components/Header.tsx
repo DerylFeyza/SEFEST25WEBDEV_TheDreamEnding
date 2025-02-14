@@ -6,6 +6,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const menus = [
   { title: "Home", href: "/" },
@@ -17,7 +18,9 @@ const menus = [
 export function Header() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
+  const {data:session} = useSession();
+  console.log(session);
+  
   useEffect(() => {
     function handleScroll() {
       setScrolled(window.scrollY > 10);
@@ -100,24 +103,26 @@ export function Header() {
             </div>
           </div>
         </div>
+
+        {/* Floating Island */}
         <div
           className={cn(
             `lg:flex hidden items-center w-full justify-between transition-all duration-300 z-40 rounded-xl p-2`,
             scrolled
-              ? "max-w-[80dvw] fixed top-5 border-[0.5px] border-green-500 shadow-md bg-green-800"
+              ? "max-w-[80dvw] fixed top-5 h-[65px] border-[0.5px] border-green-500 shadow-md bg-green-800"
               : "max-w-3xl"
           )}
         >
           {scrolled && (
             <Link href="/">
               <Image
-                src={"https://picsum.photos/40/40"}
+                src={"/logo.png"}
                 alt="Logo EcoRent"
-                width={40}
-                height={40}
+                width={120}
+                height={120}
                 className={cn(
-                  `pointer-events-none rounded-full h-[40px] transition-all duration-300 ${
-                    scrolled ? "w-[40px] " : "w-0"
+                  `pointer-events-none rounded-full w-full transition-all duration-300 object-fill ${
+                    scrolled ?? "w-0"
                   }`
                 )}
               />
@@ -142,7 +147,7 @@ export function Header() {
             className=" lg:inline-flex flex items-center justify-center"
           >
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={session?.user?.image ?? "https://github.com/shadcn.png" } />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </Link>
