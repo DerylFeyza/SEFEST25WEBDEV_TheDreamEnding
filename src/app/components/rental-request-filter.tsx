@@ -7,21 +7,14 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
-export function StatusSelector() {
-  const router = useRouter();
+export function StatusSelector({
+  onStatusChange
+}: {
+  onStatusChange: (status: string) => void;
+}) {
   const searchParams = useSearchParams();
-
-  const onStatusChange = (status: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (status !== 'ALL') {
-      params.set('status', status);
-    } else {
-      params.delete('status');
-    }
-    router.replace(`?${params.toString()}`, { scroll: false });
-  };
 
   return (
     <Select
