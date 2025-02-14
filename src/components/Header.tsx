@@ -35,7 +35,7 @@ export function Header() {
       <div
         className={cn(
           "mx-auto flex w-full origin-left py-4 px-12 bg-transparent justify-between",
-          scrolled && "justify-center",
+          scrolled && "lg:justify-center",
           isExpanded ? "z-[100]" : "z-[900]"
         )}
       >

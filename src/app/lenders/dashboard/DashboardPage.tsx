@@ -116,11 +116,11 @@ export default function DashboardPage() {
               <h3 className="text-accent-foreground text-lg font-semibold">
                 Product Management
               </h3>
-              <div className="flex gap-4">
+              <div className="lg:flex-row flex flex-col gap-4">
                 <Button className="flex-1">
-                  <Plus className="w-4 h-4 mr-2" /> 
+                  <Plus className="w-4 h-4 mr-2" />
                   <Link href="/lenders/dashboard/items/add">
-                  Add New Product
+                    Add New Product
                   </Link>
                 </Button>
                 <Button variant="outline" className="flex-1" asChild>

@@ -93,8 +93,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-green-50 to-green-100 min-h-screen px-4 py-8">
-      <Card className="max-w-2xl mx-auto">
+    <div className="flex flex-col items-center flex-grow px-4 py-8">
+      <Card className=" max-w-2xl">
         <CardHeader>
           <div className="flex items-center space-x-4">
             <Avatar className="w-20 h-20">
