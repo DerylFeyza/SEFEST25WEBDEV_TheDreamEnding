@@ -24,7 +24,7 @@ export function Header() {
     }
 
     window.addEventListener("scroll", () => {
-      console.log(window.scrollY);
+      // console.log(window.scrollY);
       handleScroll();
     });
     return () => window.removeEventListener("scroll", handleScroll);
