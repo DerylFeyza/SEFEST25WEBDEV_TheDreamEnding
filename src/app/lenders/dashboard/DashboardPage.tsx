@@ -19,16 +19,6 @@ import { formatToIDR } from '@/helper/formatToIDR';
 interface bestSeller {
   bestSeller: Item[] & { reviews: Review[] & { user: User }[] }[];
 }
-const chartdata = [
-  { date: '2 Dec', Revenue: 15 },
-  { date: '3 Dec', Revenue: 25 },
-  { date: '4 Dec', Revenue: 35 },
-  { date: '5 Dec', Revenue: 50 },
-  { date: '6 Dec', Revenue: 30 },
-  { date: '7 Dec', Revenue: 65 }
-];
-
-
 export default function DashboardPage({ bestSeller }: bestSeller) {
   console.log(bestSeller);
 

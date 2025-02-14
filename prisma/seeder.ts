@@ -18,7 +18,6 @@ async function seed() {
         password:
           "$2a$12$ZJXKiUxZVmpp/is2EC5yx.vilUBNFbMa0Nrbi1YMf3kvLyxET.bOm",
         profile_picture_url: faker.image.personPortrait({
-          sex: "female",
           size: 128,
         }),
       },
@@ -89,6 +88,7 @@ async function seed() {
         start_date: startDate,
         finished_date: finishedDate,
         status: rentalStatus,
+        paid_amount: randomItem.rent_price
       },
     });
     rentals.push(rental);

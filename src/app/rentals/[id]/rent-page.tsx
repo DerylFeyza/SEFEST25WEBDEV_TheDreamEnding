@@ -15,9 +15,8 @@ export default function RentPage({
     reviews: ReviewWithUser[];
   } & rentItem;
 }) {
-  const { data: session } = useSession();
   const [items, setItems] = useState(1);
-
+  const { data: session } = useSession();
   return (
     <div className=" p-4 mx-auto">
       <div className="md:grid-cols-3 grid grid-cols-1 gap-8">
@@ -43,7 +42,7 @@ export default function RentPage({
             item={rentItems} 
             items={items} 
             setItems={setItems}
-            // user={session?.user?.id}
+            user={session?.user?.id}
           />        
         </div>
       </div>

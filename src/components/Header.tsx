@@ -19,7 +19,6 @@ export function Header() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const {data:session} = useSession();
-  console.log(session);
   
   useEffect(() => {
     function handleScroll() {
@@ -129,6 +128,8 @@ export function Header() {
             </Link>
           )}
           {menus.map((menu) => (
+            <>
+            
             <Link
               key={menu.title}
               href={menu.href}
@@ -139,6 +140,7 @@ export function Header() {
             >
               {menu.title}
             </Link>
+            </>
           ))}
         </div>
         <div className="lg:flex items-center hidden gap-4">
