@@ -2,25 +2,73 @@
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Users,
-  Filter,
-  ClipboardList,
-  DollarSign,
-  Plus,
-  List
-} from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Users, Filter, ClipboardList, DollarSign, Plus, List } from 'lucide-react';
 import Link from 'next/link';
 import { Item, Review, User } from '@prisma/client';
 import Image from 'next/image';
 import { formatToIDR } from '@/helper/formatToIDR';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 interface bestSeller {
   bestSeller: Item[] & { reviews: Review[] & { user: User }[] }[];
 }
-export default function DashboardPage({ bestSeller }: bestSeller) {
-  console.log(bestSeller);
+
+interface DashboardStats {
+  totalRevenue: string;
+  totalOngoingRent: number;
+  totalItems: number;
+  totalOrders: number;
+  summaryRevenue: { date: string; revenue: number }[];
+}
+
+interface DashboardPageProps extends bestSeller, DashboardStats {}
+
+export default function DashboardPage({ bestSeller, summaryRevenue, totalRevenue, totalOngoingRent, totalItems, totalOrders }: DashboardPageProps) {
+  const chartData = {
+    labels: summaryRevenue.map(item => item.date),
+    datasets: [
+      {
+        label: 'Revenue',
+        data: summaryRevenue.map(item => item.revenue),
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Summary Revenue'
+      }
+    }
+  };
 
   return (
     <div className='bg-background min-h-screen p-6 space-y-6'>
@@ -30,7 +78,7 @@ export default function DashboardPage({ bestSeller }: bestSeller) {
           <div className='flex items-center justify-between'>
             <div>
               <p className='opacity-80 text-sm'>Total sales</p>
-              <p className='text-2xl font-bold'>321k</p>
+              <p className='text-2xl font-bold'>{formatToIDR(Number(totalRevenue))}</p>
             </div>
             <DollarSign className='opacity-80' />
           </div>
@@ -38,8 +86,8 @@ export default function DashboardPage({ bestSeller }: bestSeller) {
         <Card className='bg-primary text-primary-foreground p-4'>
           <div className='flex items-center justify-between'>
             <div>
-              <p className='opacity-80 text-sm'>Visitor</p>
-              <p className='text-2xl font-bold'>678k</p>
+              <p className='opacity-80 text-sm'>Ongoing Rent</p>
+              <p className='text-2xl font-bold'>{totalOngoingRent}</p>
             </div>
             <Users className='opacity-80' />
           </div>
@@ -47,8 +95,8 @@ export default function DashboardPage({ bestSeller }: bestSeller) {
         <Card className='bg-primary text-primary-foreground p-4'>
           <div className='flex items-center justify-between'>
             <div>
-              <p className='opacity-80 text-sm'>Cvr</p>
-              <p className='text-2xl font-bold'>7.89</p>
+              <p className='opacity-80 text-sm'>Total Items</p>
+              <p className='text-2xl font-bold'>{totalItems}</p>
             </div>
             <Filter className='opacity-80' />
           </div>
@@ -57,7 +105,7 @@ export default function DashboardPage({ bestSeller }: bestSeller) {
           <div className='flex items-center justify-between'>
             <div>
               <p className='opacity-80 text-sm'>Total orders</p>
-              <p className='text-2xl font-bold'>211k</p>
+              <p className='text-2xl font-bold'>{totalOrders}</p>
             </div>
             <ClipboardList className='opacity-80' />
           </div>
@@ -82,7 +130,9 @@ export default function DashboardPage({ bestSeller }: bestSeller) {
               <span className='text-destructive text-sm'>3.31%</span>
             </div>
           </div>
-          <div className='mt-4 h-[200px]'></div>
+          <div className='mt-4 h-[300px]'>
+            <Line data={chartData} options={chartOptions} />
+          </div>
         </Card>
 
         {/* Right Side Content */}

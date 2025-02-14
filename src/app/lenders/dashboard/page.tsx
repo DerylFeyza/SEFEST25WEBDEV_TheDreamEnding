@@ -1,10 +1,31 @@
 import { getBestSeller } from "@/app/utils/actions/item";
+import { getDashboardStats } from "@/app/utils/actions/dashboard";
 import DashboardPage from "./DashboardPage";
-export default async function page() {
-  const result = await getBestSeller() ;
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/next-auth";
+
+export default async function Page() {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+  if (!userId) {
+    throw new Error("User is not authenticated");
+  }
+
+  const [bestSeller, dashboardStats] = await Promise.all([
+    getBestSeller(),
+    getDashboardStats(userId)
+  ]);
+
+  if (!dashboardStats) {
+    throw new Error("Failed to fetch dashboard stats");
+  }
+
   return (
     <div>
-      <DashboardPage bestSeller={result} />
+      <DashboardPage 
+        bestSeller={bestSeller} 
+        {...dashboardStats}
+      />
     </div>
   );
 }
