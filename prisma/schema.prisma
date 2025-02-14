@@ -55,6 +55,7 @@ model Rental {
   start_date    DateTime
   finished_date DateTime
   paid_amount   Int
+  rent_amount   Int
   status        RentalStatus @default(PENDING)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
