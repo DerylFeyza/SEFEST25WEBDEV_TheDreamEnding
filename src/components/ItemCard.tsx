@@ -23,7 +23,6 @@ export function ItemCard({
   let averageRating = 0;
   if (reviews) {
     reviews.map((item) => (allRating += item.rating));
-    console.log(allRating);
     averageRating = allRating / Number(reviews.length);
   }
 
