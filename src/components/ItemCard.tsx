@@ -26,7 +26,6 @@ export function ItemCard({
     console.log(allRating);
     averageRating = allRating / Number(reviews.length);
   }
-  console.log('average rating: ', averageRating.toFixed(2));
 
   return (
     <Card className='overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105'>

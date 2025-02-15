@@ -4,15 +4,18 @@ import type { Rental, User, Item } from '@prisma/client';
 
 export const getAllRentals = async ({
   where,
-  include
+  include,
+  take
 }: {
   where?: Prisma.RentalWhereInput;
   include?: Prisma.RentalInclude;
+  take?: number;
 }) => {
   return await prisma.rental.findMany({
     where,
     include,
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
+    take
   });
 };
 
@@ -56,7 +59,7 @@ export const getLatestPendingRental = async (ownerId: string) => {
       }
     });
 
-    return rental as (Rental & { User: User; item: Item }) || null;
+    return (rental as Rental & { User: User; item: Item }) || null;
   } catch (error) {
     console.error(error);
     return null;
