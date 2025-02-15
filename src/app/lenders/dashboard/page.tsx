@@ -17,7 +17,7 @@ export default async function Page() {
   const stats = await getDashboardStats(session?.user?.id ?? '');
   const latestPendingRental = await getLatestPendingRental(session?.user?.id ?? '');
 
-  const bestSellerData = await getBestSeller();
+  const bestSellerData = await getBestSeller(session?.user?.id ?? '');
 
   if (!stats) {
     return <div>Error loading dashboard data</div>;
