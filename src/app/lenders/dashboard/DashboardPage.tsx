@@ -2,7 +2,16 @@
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ArrowUpRight, Users, Filter, ClipboardList, DollarSign, Plus, List } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Users,
+  Filter,
+  ClipboardList,
+  DollarSign,
+  Plus,
+  List
+} from 'lucide-react';
 import Link from 'next/link';
 import { Item, Review, User } from '@prisma/client';
 import Image from 'next/image';
@@ -43,13 +52,20 @@ interface DashboardStats {
 
 interface DashboardPageProps extends bestSeller, DashboardStats {}
 
-export default function DashboardPage({ bestSeller, summaryRevenue, totalRevenue, totalOngoingRent, totalItems, totalOrders }: DashboardPageProps) {
+export default function DashboardPage({
+  bestSeller,
+  summaryRevenue,
+  totalRevenue,
+  totalOngoingRent,
+  totalItems,
+  totalOrders
+}: DashboardPageProps) {
   const chartData = {
-    labels: summaryRevenue.map(item => item.date),
+    labels: summaryRevenue.map((item) => item.date),
     datasets: [
       {
         label: 'Revenue',
-        data: summaryRevenue.map(item => item.revenue),
+        data: summaryRevenue.map((item) => Number(item.revenue)),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
@@ -61,7 +77,7 @@ export default function DashboardPage({ bestSeller, summaryRevenue, totalRevenue
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: 'top' as const
       },
       title: {
         display: true,
@@ -78,7 +94,9 @@ export default function DashboardPage({ bestSeller, summaryRevenue, totalRevenue
           <div className='flex items-center justify-between'>
             <div>
               <p className='opacity-80 text-sm'>Total sales</p>
-              <p className='text-2xl font-bold'>{formatToIDR(Number(totalRevenue))}</p>
+              <p className='text-2xl font-bold'>
+                {formatToIDR(Number(totalRevenue))}
+              </p>
             </div>
             <DollarSign className='opacity-80' />
           </div>

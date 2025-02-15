@@ -13,7 +13,7 @@ export default async function Page() {
   }
 
   const [bestSeller, dashboardStats] = await Promise.all([
-    getBestSeller(),
+    getBestSeller(userId),
     getDashboardStats(userId)
   ]);
 
