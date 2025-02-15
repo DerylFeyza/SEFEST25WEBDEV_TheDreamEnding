@@ -19,6 +19,7 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { BaggageClaim, CalendarDays, Clock, HandCoins } from 'lucide-react';
 import Link from 'next/link';
+import { formatToIDR } from '@/helper/formatToIDR';
 
 export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
   const [loading, setLoading] = useState(false);
@@ -76,39 +77,47 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
               />
             </Link>
           </div>
-          <div className='col-span-4 flex flex-col justify-between space-y-3'>
-            <div className='flex justify-between'>
-              <div className='items-center space-x-2 flex flex-row'>
+          <div className='col-span-4 flex flex-col justify-between space-y-1 md:!my-0 !ml-4'>
+            <div className='grid grid-cols-[auto_1fr] '>
+              <div className='items-center gap-2 flex flex-row'>
                 <Clock className='h-4 w-4 text-muted-foreground' />
                 <span>Rent Duration: </span>
               </div>
-              <span>{rentDays} Days</span>
+              <span className='text-end'>{rentDays} Days</span>
             </div>
-            <div className='flex justify-between'>
-              <div className='items-center space-x-2 flex flex-row'>
+            <div className='grid grid-cols-[auto_1fr]'>
+              <div className='items-center gap-2 flex flex-row'>
                 <CalendarDays className='h-4 w-4 text-muted-foreground' />
-                <span>Date: </span>
+                <span>Start Date: </span>
               </div>
-              <span>
-                <span>
-                  {format(new Date(rent.start_date), 'dd-MM-yyyy')} -{' '}
-                  {format(new Date(rent.finished_date), 'dd-MM-yyyy')}
-                </span>
+              <span className='text-end'>
+                {format(new Date(rent.start_date), 'dd-MM-yyyy')}
               </span>
             </div>
-            <div className='flex justify-between'>
+            <div className='grid grid-cols-[auto_1fr]'>
+              <div className='items-center gap-2 flex flex-row'>
+                <CalendarDays className='h-4 w-4 text-muted-foreground' />
+                <span>End Date: </span>
+              </div>
+              <span className='text-end'>
+                {format(new Date(rent.finished_date), 'dd-MM-yyyy')}
+              </span>
+            </div>
+            <div className='grid grid-cols-[auto_1fr]'>
               <div className='items-center space-x-2 flex flex-row'>
                 <BaggageClaim className='h-4 w-4 text-muted-foreground' />
                 <span>Item Rented: </span>
               </div>
-              <span>{rent.rent_amount}</span>
+              <span className='text-end'>{rent.rent_amount}</span>
             </div>
-            <div className='flex justify-between'>
+            <div className='grid grid-cols-[auto_1fr]'>
               <div className='items-center space-x-2 flex flex-row'>
                 <HandCoins className='h-4 w-4 text-muted-foreground' />
                 <span>Daily Rent Price: </span>
               </div>
-              <span>Rp. {rent.paid_amount / rentDays}</span>
+              <span className='flex items-center'>
+                {formatToIDR(Math.ceil(rent.paid_amount / rentDays))}
+              </span>
             </div>
           </div>
         </CardContent>
@@ -152,7 +161,7 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
               </Button>
             ) : null}
           </div>
-          <CardTitle>Total: Rp.{rent.paid_amount}</CardTitle>
+          <CardTitle>Total: {formatToIDR(rent.paid_amount)}</CardTitle>
         </CardFooter>
       </Card>
     </div>
