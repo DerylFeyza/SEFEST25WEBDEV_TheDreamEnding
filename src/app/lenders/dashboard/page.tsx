@@ -11,6 +11,7 @@ export default async function Page() {
   const userId = session?.user?.id;
   if (!userId) {
     redirect('/auth/login');
+    redirect('/auth/login');
   }
 
   const stats = await getDashboardStats(session?.user?.id ?? '');

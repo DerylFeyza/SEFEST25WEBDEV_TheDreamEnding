@@ -1,14 +1,14 @@
 // seed.js
-import { PrismaClient } from "@prisma/client";
-import { faker } from "@faker-js/faker";
+import { PrismaClient } from '@prisma/client';
+import { fakerID_ID as faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
 async function seed() {
-  console.log("🌱 Start seeding...");
+  console.log('🌱 Start seeding...');
 
   // 1. Create Users
-  console.log("👤 Creating Users...");
+  console.log('👤 Creating Users...');
   const users = [];
   for (let i = 0; i < 10; i++) {
     const user = await prisma.user.create({
@@ -16,18 +16,18 @@ async function seed() {
         name: faker.person.fullName(),
         email: faker.internet.email(),
         password:
-          "$2a$12$ZJXKiUxZVmpp/is2EC5yx.vilUBNFbMa0Nrbi1YMf3kvLyxET.bOm",
+          '$2a$12$ZJXKiUxZVmpp/is2EC5yx.vilUBNFbMa0Nrbi1YMf3kvLyxET.bOm',
         profile_picture_url: faker.image.personPortrait({
-          size: 128,
-        }),
-      },
+          size: 128
+        })
+      }
     });
     users.push(user);
   }
   console.log(`👤 Created ${users.length} Users.`);
 
   // 2. Create Items, each owned by a User
-  console.log("📦 Creating Items...");
+  console.log('📦 Creating Items...');
   const items = [];
   for (let i = 0; i < 20; i++) {
     const randomUser = users[Math.floor(Math.random() * users.length)];
@@ -40,33 +40,33 @@ async function seed() {
         pickup_location: faker.location.city(),
         description: faker.lorem.sentence({ min: 20, max: 75 }),
         condition: faker.helpers.arrayElement([
-          "New",
-          "Like New",
-          "Good",
-          "Used",
-          "Fair",
+          'New',
+          'Like New',
+          'Good',
+          'Used',
+          'Fair'
         ]),
         category: faker.helpers.arrayElement([
-          "Electronics",
-          "Clothing",
-          "Books",
-          "Toys",
-          "Music",
-          "Sports",
-          "Other",
+          'Electronics',
+          'Clothing',
+          'Books',
+          'Toys',
+          'Music',
+          'Sports',
+          'Other'
         ]),
         available: faker.datatype.boolean(),
         item_amount: faker.number.int({ min: 1, max: 10 }),
         image_url: faker.image.urlLoremFlickr({ width: 640, height: 480 }),
-        owner_id: randomUser.id,
-      },
+        owner_id: randomUser.id
+      }
     });
     items.push(item);
   }
   console.log(`📦 Created ${items.length} Items.`);
 
   // 3. Create Rentals, linking Users and Items
-  console.log("🗓️ Creating Rentals...");
+  console.log('🗓️ Creating Rentals...');
   const rentals = [];
   for (let i = 0; i < 30; i++) {
     const randomUser = users[Math.floor(Math.random() * users.length)];
@@ -74,11 +74,11 @@ async function seed() {
     const startDate = faker.date.past();
     const finishedDate = faker.date.future({ refDate: startDate });
     const rentalStatus = faker.helpers.arrayElement([
-      "PENDING",
-      "CONFIRMED",
-      "ONGOING",
-      "COMPLETED",
-      "CANCELLED",
+      'PENDING',
+      'CONFIRMED',
+      'ONGOING',
+      'COMPLETED',
+      'CANCELLED'
     ]);
 
     const rental = await prisma.rental.create({
@@ -88,15 +88,16 @@ async function seed() {
         start_date: startDate,
         finished_date: finishedDate,
         status: rentalStatus,
-        paid_amount: randomItem.rent_price
-      },
+        paid_amount: randomItem.rent_price,
+        rent_amount: faker.number.int({ min: 1, max: randomItem.item_amount })
+      }
     });
     rentals.push(rental);
   }
   console.log(`🗓️ Created ${rentals.length} Rentals.`);
 
   // 4. Create Reviews, linking Users and Items
-  console.log("⭐ Creating Reviews...");
+  console.log('⭐ Creating Reviews...');
   const reviews = [];
   for (let i = 0; i < 20; i++) {
     const randomUser = users[Math.floor(Math.random() * users.length)];
@@ -105,20 +106,21 @@ async function seed() {
       data: {
         rating: faker.number.int({ min: 1, max: 5 }),
         comment: faker.lorem.paragraph(),
+        createdAt: faker.date.recent({ days: 30 }),
         user_id: randomUser.id,
-        item_id: randomItem.id,
-      },
+        item_id: randomItem.id
+      }
     });
     reviews.push(review);
   }
   console.log(`⭐ Created ${reviews.length} Reviews.`);
 
-  console.log("✅ Seeding finished.");
+  console.log('✅ Seeding finished.');
 }
 
 seed()
   .catch((e) => {
-    console.error("🔥 Seeding failed:", e);
+    console.error('🔥 Seeding failed:', e);
   })
   .finally(async () => {
     await prisma.$disconnect();
