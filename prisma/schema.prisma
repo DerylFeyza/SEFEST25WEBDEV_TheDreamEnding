@@ -15,6 +15,7 @@ enum RentalStatus {
   CANCELLED
 }
 
+
 model User {
   id                  String   @id @default(uuid())
   name                String
@@ -39,6 +40,8 @@ model Item {
   image_url       String
   available       Boolean  @default(true)
   item_amount     Int      @default(1)
+  dailyCarbonSaving   Float
+  dailyWasteReduction Float
   owner_id        String
   is_deleted      Boolean  @default(false)
   createdAt       DateTime @default(now())
@@ -61,6 +64,7 @@ model Rental {
   updatedAt     DateTime     @updatedAt
   item          Item         @relation(fields: [item_id], references: [id])
   User          User         @relation(fields: [user_id], references: [id])
+  sustainabilityImpact  SustainabilityImpact?
 }
 
 model Review {
@@ -73,4 +77,13 @@ model Review {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [user_id], references: [id])
   item      Item     @relation(fields: [item_id], references: [id])
+}
+
+model SustainabilityImpact {
+  id             String   @id @default(uuid())
+  rental_id       String   @unique
+  carbon_savings  Float
+  waste_reduction Float
+  createdAt      DateTime @default(now())
+  rental         Rental   @relation(fields: [rental_id], references: [id])
 }
