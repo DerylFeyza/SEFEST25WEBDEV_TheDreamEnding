@@ -65,7 +65,7 @@ export default function DashboardPage({
     datasets: [
       {
         label: 'Revenue',
-        data: summaryRevenue.map((item) => Number(item.revenue)),
+        data: summaryRevenue.map((item) => item.revenue),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
