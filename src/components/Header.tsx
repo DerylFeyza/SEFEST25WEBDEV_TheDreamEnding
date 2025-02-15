@@ -7,15 +7,24 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Menu } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const menus = [
   { title: 'Home', href: '/' },
-  { title: 'Browse Items', href: '/items' },
+  { title: 'Browse Items', href: '/rentals' },
   { title: 'My Rentals', href: '/lenders/dashboard' },
   { title: 'Start a Rent', href: '/rent' }
 ];
 
 export function Header() {
+  const { push } = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { data: session } = useSession();
@@ -141,17 +150,31 @@ export function Header() {
           ))}
         </div>
         <div className='lg:flex items-center hidden gap-4'>
-          <Link
-            href={'/profile'}
-            className=' lg:inline-flex flex items-center justify-center'
-          >
-            <Avatar>
-              <AvatarImage
-                src={session?.user?.image ?? 'https://github.com/shadcn.png'}
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Link
+                href={'/profile'}
+                className=' lg:inline-flex flex items-center justify-center'
+              >
+                <Avatar>
+                  <AvatarImage
+                    src={
+                      session?.user?.image ?? 'https://github.com/shadcn.png'
+                    }
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </Link>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className='w-56 mr-4 z-[1000]'>
+              <DropdownMenuItem onClick={() => push('/profile')}>
+                <button className='w-full text-start'>Profile</button>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut()}>
+                <button className='w-full text-start'>Log Out</button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </nav>
