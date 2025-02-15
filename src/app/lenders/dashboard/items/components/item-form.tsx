@@ -149,21 +149,21 @@ export default function ItemForm({
   };
 
   return (
-    <Card className="w-full mx-auto">
+    <Card className='w-full mx-auto'>
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-left">
+        <CardTitle className='text-2xl font-bold text-left'>
           {pageTitle}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
             <FormField
               control={form.control}
-              name="image"
+              name='image'
               render={({ field }) => (
-                <div className="space-y-6">
-                  <FormItem className="w-full">
+                <div className='space-y-6'>
+                  <FormItem className='w-full'>
                     <FormLabel>Images</FormLabel>
                     <FormControl>
                       <FileUploader
@@ -180,15 +180,15 @@ export default function ItemForm({
               )}
             />
 
-            <div className="md:grid-cols-2 grid grid-cols-1 gap-6">
+            <div className='md:grid-cols-2 grid grid-cols-1 gap-6'>
               <FormField
                 control={form.control}
-                name="name"
+                name='name'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Item Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter Item name" {...field} />
+                      <Input placeholder='Enter Item name' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -196,7 +196,7 @@ export default function ItemForm({
               />
               <FormField
                 control={form.control}
-                name="category"
+                name='category'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
@@ -206,16 +206,22 @@ export default function ItemForm({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select categories" />
+                          <SelectValue placeholder='Select categories' />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="beauty">Beauty Items</SelectItem>
-                        <SelectItem value="electronics">Electronics</SelectItem>
-                        <SelectItem value="clothing">Clothing</SelectItem>
-                        <SelectItem value="home">Home & Garden</SelectItem>
-                        <SelectItem value="sports">
+                        <SelectItem value='electronics'>Electronics</SelectItem>
+                        <SelectItem value='clothing'>Clothing</SelectItem>
+                        <SelectItem value='construction'>Construction Tools</SelectItem>
+                        <SelectItem value='home'>Home & Garden</SelectItem>
+                        <SelectItem value='sports'>
                           Sports & Outdoors
+                        </SelectItem>
+                        <SelectItem value='bicycles'>
+                          Bicycles & E-Scooters
+                        </SelectItem>
+                        <SelectItem value='cars'>
+                          Electric & Hybrid Cars
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -225,12 +231,12 @@ export default function ItemForm({
               />
               <FormField
                 control={form.control}
-                name="price"
+                name='price'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <Input type="number" step="0.01" {...field} />
+                      <Input type='number' step='0.01' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -238,12 +244,12 @@ export default function ItemForm({
               />
               <FormField
                 control={form.control}
-                name="amount"
+                name='amount'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Amount</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input type='number' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -251,12 +257,12 @@ export default function ItemForm({
               />
               <FormField
                 control={form.control}
-                name="condition"
+                name='condition'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Condition</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter condition" {...field} />
+                      <Input placeholder='Enter condition' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -264,14 +270,14 @@ export default function ItemForm({
               />
               <FormField
                 control={form.control}
-                name="location"
+                name='location'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Pick Up Location</FormLabel>
                     <FormControl>
                       <Input
-                        type="location"
-                        placeholder="Enter Pick Up Location"
+                        type='location'
+                        placeholder='Enter Pick Up Location'
                         {...field}
                       />
                     </FormControl>
@@ -282,14 +288,14 @@ export default function ItemForm({
             </div>
             <FormField
               control={form.control}
-              name="description"
+              name='description'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter Item description"
-                      className="resize-none"
+                      placeholder='Enter Item description'
+                      className='resize-none'
                       {...field}
                     />
                   </FormControl>
@@ -297,7 +303,7 @@ export default function ItemForm({
                 </FormItem>
               )}
             />
-            <Button disabled={loading} type="submit">
+            <Button disabled={loading} type='submit'>
               Add Item
             </Button>
           </form>

@@ -5,6 +5,7 @@ import { findItemRentalCount } from '../database/item.query';
 import { createRental, updateRental } from '../database/rental.query';
 import type { Prisma, RentalStatus } from '@prisma/client';
 import { getDaysDifference } from '@/helper/days-diff';
+import { calculateRentalImpact } from './environment';
 
 export const handleCreateRental = async (formData: FormData) => {
   try {
@@ -43,9 +44,22 @@ export const handleCreateRental = async (formData: FormData) => {
       };
     }
 
+    const impact = calculateRentalImpact(
+      startDate,
+      endDate,
+      item?.dailyCarbonSaving ?? 0,
+      item?.dailyWasteReduction ?? 0
+    );
+
     const rental: Prisma.RentalCreateInput = {
       start_date: startDate,
       finished_date: endDate,
+      sustainabilityImpact: {
+        create: {
+          carbon_savings: impact.carbonSavings,
+          waste_reduction: impact.wasteReduction
+        }
+      },
       status: 'PENDING',
       item: { connect: { id: itemId } },
       User: { connect: { id: userId } },
@@ -75,7 +89,7 @@ export const handleUpdateRental = async (id: string, formData: FormData) => {
     return { success: true, message: 'Rental status updated successfully' };
   } catch (error) {
     console.error(error);
-
+    
     return { success: false, message: 'Failed to update rental' };
   }
 };

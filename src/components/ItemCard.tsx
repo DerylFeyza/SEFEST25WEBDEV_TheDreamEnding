@@ -8,16 +8,19 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Leaf, Star } from 'lucide-react';
-import { formatToIDR } from '@/helper/formatToIDR'; // Add this import (adjust the path as needed)
-import { allItems } from '@/types/entities';
+import { Leaf, Star, Recycle, CloudOff } from 'lucide-react';
+import { formatToIDR } from '@/helper/formatToIDR';
+import type { allItems } from '@/types/entities';
+
 export function ItemCard({
   id,
   name,
   category,
   image_url,
   rent_price,
-  reviews
+  reviews,
+  dailyCarbonSaving,
+  dailyWasteReduction
 }: allItems) {
   let allRating = 0;
   let averageRating = 0;
@@ -47,9 +50,21 @@ export function ItemCard({
           {name}
         </CardTitle>
         <p className='text-sm text-gray-600 mb-2'>{category}</p>
-        <div className='flex items-center text-green-600'>
+        <div className='flex items-center text-green-600 mb-2'>
           <Leaf className='w-4 h-4 mr-1' />
           <span className='text-xs'>Eco-friendly rental</span>
+        </div>
+        <div className='flex items-center text-blue-600 mb-2'>
+          <CloudOff className='w-4 h-4 mr-1' />
+          <span className='text-xs'>
+            {dailyCarbonSaving.toFixed(2)} kg CO2 saved/day
+          </span>
+        </div>
+        <div className='flex items-center text-orange-600 mb-2'>
+          <Recycle className='w-4 h-4 mr-1' />
+          <span className='text-xs'>
+            {dailyWasteReduction.toFixed(2)} kg waste reduced/day
+          </span>
         </div>
         {averageRating > 0 ? (
           <div className='flex items-center mt-2'>

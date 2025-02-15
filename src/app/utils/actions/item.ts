@@ -9,11 +9,13 @@ import {
 } from '../database/item.query';
 import { handleImageDelete, imageUploader } from './imageUpload';
 import { Prisma } from '@prisma/client';
+import { getDailyEnvironmentalRates } from './environment';
 
 export const handleCreateItem = async (formData: FormData) => {
   try {
     let imageUrl;
     const image = formData.get('image') as File | null;
+    const category = formData.get('category') as string;
 
     if (image && image.size > 0) {
       const uploadResult = await imageUploader(image);
@@ -23,19 +25,22 @@ export const handleCreateItem = async (formData: FormData) => {
       imageUrl = uploadResult.url;
     }
 
+    const rates = getDailyEnvironmentalRates(category);
+
     const newItemData = {
       name: formData.get('name') as string,
       description: formData.get('description') as string,
-      category: formData.get('category') as string,
+      category: category,
       rent_price: Number(formData.get('rent_price')),
       item_amount: Number(formData.get('item_amount')),
       condition: formData.get('condition') as string,
+      dailyCarbonSaving: rates.carbon,
+      dailyWasteReduction: rates.waste,
       pickup_location: formData.get('pickup_location') as string,
       owner: { connect: { id: formData.get('owner_id') as string } },
-      image_url: imageUrl
+      image_url: imageUrl || ''
     };
 
-    //@ts-expect-error idc
     await createItem(newItemData);
     return { success: true, message: 'Successfully added item' };
   } catch (error) {
