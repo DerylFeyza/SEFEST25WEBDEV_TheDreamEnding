@@ -72,9 +72,9 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
               <Image
                 src={rent.item.image_url}
                 alt={rent.item.name}
-                width={150}
-                height={150}
-                className='object-contain rounded-lg hover:scale-110 transition'
+                width={500}
+                height={500}
+                className='object-cover h-full w-full rounded-lg hover:scale-110 transition'
               />
             </Link>
           </div>
@@ -116,7 +116,7 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
                 <HandCoins className='h-4 w-4 text-muted-foreground' />
                 <span>Daily Rent Price: </span>
               </div>
-              <span className='flex items-center'>
+              <span className='text-end'>
                 {formatToIDR(Math.ceil(rent.paid_amount / rentDays))}
               </span>
             </div>

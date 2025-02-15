@@ -18,7 +18,6 @@ export default function RentalsPage({
   const params = new URLSearchParams();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState(searchData ?? '');
-  console.log('items', initialItems);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
