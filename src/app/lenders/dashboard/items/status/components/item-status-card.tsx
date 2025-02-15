@@ -18,8 +18,8 @@ export default function ItemStatusCard({
       <div className='grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-8'>
         <div className='aspect-square relative flex justify-center col-span-5 transition-all duration-300 hover:shadow-lg'>
           <Image
-            src={item.image_url}
-            alt={item.name}
+            src={item?.image_url}
+            alt={item?.name}
             fill
             className='object-cover rounded-lg'
           />
