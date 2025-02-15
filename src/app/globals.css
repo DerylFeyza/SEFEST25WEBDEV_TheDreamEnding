@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   --background: #0a0a0a;
   --foreground: #ededed;
 }
@@ -15,7 +15,13 @@
 body {
   font-family: var(--font-poppins);
 }
-
+.two-line-truncate {
+  display: -webkit-box; /* Required for line clamping */
+  line-clamp: 2;
+  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden; /*Hide the rest of the text*/
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

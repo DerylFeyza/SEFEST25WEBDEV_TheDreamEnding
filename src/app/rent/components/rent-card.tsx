@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { BaggageClaim, CalendarDays, Clock, HandCoins } from 'lucide-react';
 import Link from 'next/link';
 import { formatToIDR } from '@/helper/formatToIDR';
+import { cn } from '@/lib/utils';
 
 export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
   const [loading, setLoading] = useState(false);
@@ -72,21 +73,26 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
               <Image
                 src={rent.item.image_url}
                 alt={rent.item.name}
-                width={150}
-                height={150}
-                className='object-contain rounded-lg hover:scale-110 transition'
+                width={500}
+                height={500}
+                className='object-cover h-full w-full rounded-lg hover:scale-110 transition'
               />
             </Link>
           </div>
-          <div className='col-span-4 flex flex-col justify-between space-y-1 md:!my-0 !ml-4'>
-            <div className='grid grid-cols-[auto_1fr] '>
+          <div
+            className={cn(
+              'col-span-4 flex flex-col justify-between space-y-1 md:!my-0 !ml-4',
+              '[&>*]:grid [&>*]:grid-cols-[auto_1fr]'
+            )}
+          >
+            <div>
               <div className='items-center gap-2 flex flex-row'>
                 <Clock className='h-4 w-4 text-muted-foreground' />
                 <span>Rent Duration: </span>
               </div>
               <span className='text-end'>{rentDays} Days</span>
             </div>
-            <div className='grid grid-cols-[auto_1fr]'>
+            <div>
               <div className='items-center gap-2 flex flex-row'>
                 <CalendarDays className='h-4 w-4 text-muted-foreground' />
                 <span>Start Date: </span>
@@ -95,7 +101,7 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
                 {format(new Date(rent.start_date), 'dd-MM-yyyy')}
               </span>
             </div>
-            <div className='grid grid-cols-[auto_1fr]'>
+            <div>
               <div className='items-center gap-2 flex flex-row'>
                 <CalendarDays className='h-4 w-4 text-muted-foreground' />
                 <span>End Date: </span>
@@ -104,19 +110,19 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
                 {format(new Date(rent.finished_date), 'dd-MM-yyyy')}
               </span>
             </div>
-            <div className='grid grid-cols-[auto_1fr]'>
+            <div>
               <div className='items-center space-x-2 flex flex-row'>
                 <BaggageClaim className='h-4 w-4 text-muted-foreground' />
                 <span>Item Rented: </span>
               </div>
               <span className='text-end'>{rent.rent_amount}</span>
             </div>
-            <div className='grid grid-cols-[auto_1fr]'>
+            <div>
               <div className='items-center space-x-2 flex flex-row'>
                 <HandCoins className='h-4 w-4 text-muted-foreground' />
                 <span>Daily Rent Price: </span>
               </div>
-              <span className='flex items-center'>
+              <span className='text-end'>
                 {formatToIDR(Math.ceil(rent.paid_amount / rentDays))}
               </span>
             </div>

@@ -30,23 +30,23 @@ export function ItemCard({
   }
 
   return (
-    <Card className='overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105'>
-      <CardHeader className='p-0'>
+    <Card className='overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 grid grid-rows-[1fr_auto_auto] '>
+      <CardHeader className=' p-0'>
         <div className='relative h-48 w-full flex justify-center'>
           <Image
             src={image_url || '/placeholder.svg'}
             alt={name}
-            width={350}
-            height={200}
-            className='transition-all object-contain max-h-48 size-auto duration-300 hover:opacity-90'
+            width={1000}
+            height={1000}
+            className='transition-all object-cover size-full duration-300 hover:opacity-90'
           />
-          <div className='absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full'>
+          <div className='absolute top-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full'>
             {formatToIDR(rent_price)}/day
           </div>
         </div>
       </CardHeader>
       <CardContent className='p-4'>
-        <CardTitle className='text-lg font-semibold text-gray-800 mb-2'>
+        <CardTitle className='text-lg font-semibold text-gray-800 mb-2 two-line-truncate break-all'>
           {name}
         </CardTitle>
         <p className='text-sm text-gray-600 mb-2'>{category}</p>
@@ -68,7 +68,7 @@ export function ItemCard({
         </div>
         {averageRating > 0 ? (
           <div className='flex items-center mt-2'>
-            {Array.from([1, 2, 3, 4, 5]).map((item, index) => {
+            {Array.from([1, 2, 3, 4, 5]).map((_item, index) => {
               return (
                 <Star
                   key={index}

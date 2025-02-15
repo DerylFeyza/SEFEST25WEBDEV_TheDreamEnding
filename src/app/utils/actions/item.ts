@@ -8,6 +8,7 @@ import {
   deleteItem
 } from '../database/item.query';
 import { handleImageDelete, imageUploader } from './imageUpload';
+import { Prisma } from '@prisma/client';
 import { getDailyEnvironmentalRates } from './environment';
 
 export const handleCreateItem = async (formData: FormData) => {
@@ -129,8 +130,13 @@ export const getItemsByID = async (
   });
 };
 
-export const getAllItems = async () => {
+export const getAllItems = async ({
+  where
+}: {
+  where?: Prisma.ItemWhereInput;
+} = {}) => {
   return await prisma.item.findMany({
+    where,
     include: {
       reviews: {
         include: {

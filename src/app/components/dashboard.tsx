@@ -21,13 +21,13 @@ export function Dashboard({ items, rentalHistory }: DashboardProps) {
     <Layout>
       <Hero />
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-        <div className='col-span-2'>
+        <div className='lg:col-span-2 sm:col-span-3'>
           <FeaturedItems items={shuffledItems} />
         </div>
-        <div className='mt-12'>
+        <div className='lg:mt-16 lg:col-span-1 sm:col-span-3'>
           <RentalHistory rentalHistory={rentalHistory} />
         </div>
-        <div className='col-span-3'>
+        <div className='lg:col-span-3 sm:col-span-3'>
           <SustainabilitySection />
         </div>
       </div>
