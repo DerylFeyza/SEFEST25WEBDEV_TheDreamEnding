@@ -33,9 +33,9 @@ export function ItemCard({
           <Image
             src={image_url || '/placeholder.svg'}
             alt={name}
-            width={350}
-            height={200}
-            className='transition-all object-contain max-h-48 size-auto duration-300 hover:opacity-90'
+            width={1000}
+            height={1000}
+            className='transition-all object-cover size-full duration-300 hover:opacity-90'
           />
           <div className='absolute top-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full'>
             {formatToIDR(rent_price)}/day
