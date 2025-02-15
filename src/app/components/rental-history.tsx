@@ -16,7 +16,7 @@ export const RentalHistory = ({
 }: {
   rentalHistory: ExtendedRental[];
 }) => (
-  <Card className='mt-4'>
+  <Card className='max-h-[415px] overflow-auto'>
     <CardHeader className='!pb-2'>
       <CardTitle>Rental History</CardTitle>
     </CardHeader>

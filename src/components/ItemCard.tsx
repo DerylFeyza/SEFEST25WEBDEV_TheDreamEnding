@@ -37,7 +37,7 @@ export function ItemCard({
             height={200}
             className='transition-all object-contain max-h-48 size-auto duration-300 hover:opacity-90'
           />
-          <div className='absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full'>
+          <div className='absolute top-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full'>
             {formatToIDR(rent_price)}/day
           </div>
         </div>
