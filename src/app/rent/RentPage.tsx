@@ -38,7 +38,7 @@ export default function RentPage({
     const newSearchTerm = e.target.value;
     setSearchTerm(newSearchTerm);
 
-    if (statusTerm) {
+    if (statusTerm !== 'ALL') {
       params.set('status', statusTerm);
     }
 
@@ -52,17 +52,19 @@ export default function RentPage({
   };
 
   return (
-    <div>
-      <div className='xl:mx-8 flex flex-row justify-between space-x-4'>
-        <div className='flex-8'>
+    <div className='xl:mx-8'>
+      <div className='justify-between space-x-4 flex w-full flex-wrap'>
+        <div className='flex-grow'>
           <SearchInput
             searchTerm={searchTerm}
             onSearchChange={handleSearchChange}
           />
         </div>
-        <StatusSelector onStatusChange={onStatusChange} />
+        <div className='flex'>
+          <StatusSelector onStatusChange={onStatusChange} />
+        </div>
       </div>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6  xl:grid-cols-9 bg-red xl:mx-8 '>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6 xl:grid-cols-9 bg-red '>
         {userRentals.map((rent) => (
           <div className='col-span-3' key={rent.id}>
             <RentCard rent={rent as RentWithItemAndOwner} />
