@@ -28,8 +28,8 @@ export function ItemCard({
   }
 
   return (
-    <Card className='overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105'>
-      <CardHeader className='p-0'>
+    <Card className='overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 grid grid-rows-[1fr_auto_auto] '>
+      <CardHeader className=' p-0'>
         <div className='relative h-48 w-full flex justify-center'>
           <Image
             src={image_url || '/placeholder.svg'}
@@ -44,7 +44,7 @@ export function ItemCard({
         </div>
       </CardHeader>
       <CardContent className='p-4'>
-        <CardTitle className='text-lg font-semibold text-gray-800 mb-2'>
+        <CardTitle className='text-lg font-semibold text-gray-800 mb-2 two-line-truncate break-all'>
           {name}
         </CardTitle>
         <p className='text-sm text-gray-600 mb-2'>{category}</p>
@@ -54,7 +54,7 @@ export function ItemCard({
         </div>
         {averageRating > 0 ? (
           <div className='flex items-center mt-2'>
-            {Array.from([1, 2, 3, 4, 5]).map((item, index) => {
+            {Array.from([1, 2, 3, 4, 5]).map((_item, index) => {
               return (
                 <Star
                   key={index}
