@@ -72,8 +72,9 @@ export function RentCard({ rent }: { rent: RentWithItemAndOwner }) {
               <Image
                 src={rent.item.image_url}
                 alt={rent.item.name}
-                fill
-                className='object-cover rounded-lg'
+                width={150}
+                height={150}
+                className='object-contain rounded-lg hover:scale-110 transition'
               />
             </Link>
           </div>
