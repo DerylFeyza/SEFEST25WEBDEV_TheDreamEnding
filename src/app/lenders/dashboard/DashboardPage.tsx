@@ -4,39 +4,28 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
   ArrowRight,
-  ArrowUpRight,
   Users,
   Filter,
   ClipboardList,
   DollarSign,
   Plus,
-  List
+  List,
+  Clock,
+  CalendarDays,
+  HandCoins,
+  BaggageClaim
 } from 'lucide-react';
 import Link from 'next/link';
-import { Item, Review, User } from '@prisma/client';
+import type { Item, Review, User, Rental } from '@prisma/client';
 import Image from 'next/image';
 import { formatToIDR } from '@/helper/formatToIDR';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import { format } from 'date-fns';
+import { getDaysDifference } from '@/helper/days-diff';
+import { Badge } from '@/components/ui/badge';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { useState } from 'react';
+import { handleUpdateRental } from '@/app/utils/actions/rental';
+import { toast } from 'sonner';
 
 interface bestSeller {
   bestSeller: Item[] & { reviews: Review[] & { user: User }[] }[];
@@ -47,45 +36,43 @@ interface DashboardStats {
   totalOngoingRent: number;
   totalItems: number;
   totalOrders: number;
-  summaryRevenue: { date: string; revenue: number }[];
 }
 
-interface DashboardPageProps extends bestSeller, DashboardStats {}
+interface LatestPendingRental extends Rental {
+  User: User;
+  item: Item;
+}
+
+interface DashboardPageProps extends bestSeller, DashboardStats {
+  latestPendingRental: LatestPendingRental | null;
+}
 
 export default function DashboardPage({
   bestSeller,
-  summaryRevenue,
   totalRevenue,
   totalOngoingRent,
   totalItems,
-  totalOrders
+  totalOrders,
+  latestPendingRental
 }: DashboardPageProps) {
-  const chartData = {
-    labels: summaryRevenue.map((item) => item.date),
-    datasets: [
-      {
-        label: 'Revenue',
-        data: summaryRevenue.map((item) => item.revenue),
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }
-    ]
-  };
+  const [loading, setLoading] = useState(false);
 
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const
-      },
-      title: {
-        display: true,
-        text: 'Summary Revenue'
-      }
+  const handleUpdate = async (status: 'CONFIRMED' | 'CANCELLED') => {
+    if (!latestPendingRental) return;
+
+    setLoading(true);
+    const loadingToast = toast.loading('Updating Request...');
+    const formData = new FormData();
+    formData.append('status', status);
+    const result = await handleUpdateRental(latestPendingRental.id, formData);
+    if (result.success) {
+      setLoading(false);
+      toast.success('Rent request updated successfully', { id: loadingToast });
+    } else {
+      setLoading(false);
+      toast.error('Rent request update failed!', { id: loadingToast });
     }
   };
-
   return (
     <div className='bg-background min-h-screen p-6 space-y-6'>
       {/* Stats Cards */}
@@ -132,25 +119,105 @@ export default function DashboardPage({
 
       {/* Main Content */}
       <div className='md:grid-cols-2 grid gap-6'>
-        {/* Chart */}
+        {/* Latest Pending Rental Request */}
         <Card className='p-6'>
           <div className='flex items-start justify-between mb-4'>
             <div>
-              <h2 className='text-lg font-semibold'>Summary Revenue</h2>
+              <h2 className='text-lg font-semibold'>
+                Latest Pending Rental Request
+              </h2>
               <p className='text-muted-foreground text-sm'>
-                Last update last week
+                Most recent rental request awaiting your confirmation
               </p>
             </div>
-            <div className='flex gap-2'>
-              <span className='text-primary flex items-center gap-1 text-sm'>
-                <ArrowUpRight className='w-4 h-4' /> 23.22%
-              </span>
-              <span className='text-destructive text-sm'>3.31%</span>
+          </div>
+          {latestPendingRental ? (
+            <div className='space-y-4'>
+              <div className='flex justify-between items-center'>
+                <h3 className='text-lg font-semibold'>
+                  {latestPendingRental.User.name}
+                </h3>
+                <Badge className='bg-yellow-100 text-yellow-800'>Pending</Badge>
+              </div>
+              <div className='grid grid-cols-2 gap-4'>
+                <AspectRatio ratio={16 / 9} className='bg-muted'>
+                  <Image
+                    src={
+                      latestPendingRental.item.image_url || '/placeholder.svg'
+                    }
+                    alt={latestPendingRental.item.name}
+                    fill
+                    className='rounded-md object-cover'
+                  />
+                </AspectRatio>
+                <div className='space-y-2'>
+                  <div className='flex justify-between'>
+                    <div className='flex items-center space-x-2'>
+                      <Clock className='h-4 w-4 text-muted-foreground' />
+                      <span>Duration:</span>
+                    </div>
+                    <span>
+                      {getDaysDifference(
+                        latestPendingRental.start_date,
+                        latestPendingRental.finished_date
+                      )}{' '}
+                      Days
+                    </span>
+                  </div>
+                  <div className='flex justify-between'>
+                    <div className='flex items-center space-x-2'>
+                      <CalendarDays className='h-4 w-4 text-muted-foreground' />
+                      <span>Dates:</span>
+                    </div>
+                    <span className='text-sm'>
+                      {format(
+                        new Date(latestPendingRental.start_date),
+                        'dd MMM'
+                      )}{' '}
+                      -{' '}
+                      {format(
+                        new Date(latestPendingRental.finished_date),
+                        'dd MMM'
+                      )}
+                    </span>
+                  </div>
+                  <div className='flex justify-between'>
+                    <div className='flex items-center space-x-2'>
+                      <BaggageClaim className='h-4 w-4 text-muted-foreground' />
+                      <span>Amount:</span>
+                    </div>
+                    <span>{latestPendingRental.rent_amount}</span>
+                  </div>
+                  <div className='flex justify-between'>
+                    <div className='flex items-center space-x-2'>
+                      <HandCoins className='h-4 w-4 text-muted-foreground' />
+                      <span>Revenue:</span>
+                    </div>
+                    <span>{formatToIDR(latestPendingRental.paid_amount)}</span>
+                  </div>
+                </div>
+              </div>
+              <div className='flex justify-between items-center'>
+                <Button
+                  variant='outline'
+                  onClick={() => handleUpdate('CANCELLED')}
+                  disabled={loading}
+                >
+                  Reject
+                </Button>
+                <Button
+                  onClick={() => handleUpdate('CONFIRMED')}
+                  disabled={loading}
+                >
+                  Confirm
+                </Button>
+              </div>
             </div>
-          </div>
-          <div className='mt-4 h-[300px]'>
-            <Line data={chartData} options={chartOptions} />
-          </div>
+          ) : (
+            <p className='text-muted-foreground'>
+              No pending rental requests at the moment.
+            </p>
+          )}
         </Card>
 
         {/* Right Side Content */}
@@ -188,7 +255,7 @@ export default function DashboardPage({
                 <div key={index} className='space-y-2'>
                   <div className='aspect-square bg-muted rounded-lg'>
                     <Image
-                      src={product.image_url}
+                      src={product.image_url || '/placeholder.svg'}
                       alt={product.name}
                       width={200}
                       height={200}
