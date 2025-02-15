@@ -1,31 +1,26 @@
-import { getBestSeller } from "@/app/utils/actions/item";
 import { getDashboardStats } from "@/app/utils/actions/dashboard";
+import { getLatestPendingRental } from "@/app/utils/database/rental.query";
 import DashboardPage from "./DashboardPage";
-import { getServerSession } from "next-auth/next";
+import { getBestSeller } from "@/app/utils/actions/item";
+import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
+import { redirect } from 'next/navigation';
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
   if (!userId) {
-    throw new Error("User is not authenticated");
+    redirect('/auth/login');
   }
 
-  const [bestSeller, dashboardStats] = await Promise.all([
-    getBestSeller(),
-    getDashboardStats(userId)
-  ]);
+  const stats = await getDashboardStats(session?.user?.id ?? '');
+  const latestPendingRental = await getLatestPendingRental(session?.user?.id ?? '');
 
-  if (!dashboardStats) {
-    throw new Error("Failed to fetch dashboard stats");
+  const bestSellerData = await getBestSeller();
+
+  if (!stats) {
+    return <div>Error loading dashboard data</div>;
   }
 
-  return (
-    <div>
-      <DashboardPage 
-        bestSeller={bestSeller} 
-        {...dashboardStats}
-      />
-    </div>
-  );
+  return <DashboardPage {...stats} latestPendingRental={latestPendingRental} bestSeller={bestSellerData}/>;
 }
