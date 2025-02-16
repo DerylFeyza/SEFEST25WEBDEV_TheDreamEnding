@@ -35,7 +35,6 @@ export function Header() {
     }
 
     window.addEventListener('scroll', () => {
-      // console.log(window.scrollY);
       handleScroll();
     });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -53,7 +52,7 @@ export function Header() {
         <Link href={'/'} className='lg:flex items-center justify-center hidden'>
           <Image
             src='/logo.png'
-            alt='Logo EcoRent'
+            alt='Logo GreenRent'
             height={50}
             width={120}
             className=' pointer-events-none h-[50px] w-[120px] '
@@ -125,7 +124,7 @@ export function Header() {
             <Link href='/'>
               <Image
                 src={'/logo.png'}
-                alt='Logo EcoRent'
+                alt='Logo GreenRent'
                 width={120}
                 height={120}
                 className={cn(

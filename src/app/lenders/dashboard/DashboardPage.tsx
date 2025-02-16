@@ -45,6 +45,8 @@ interface LatestPendingRental extends Rental {
 
 interface DashboardPageProps extends bestSeller, DashboardStats {
   latestPendingRental: LatestPendingRental | null;
+  totalCarbonSavings: number;
+  totalWasteReduction: number;
 }
 
 export default function DashboardPage({

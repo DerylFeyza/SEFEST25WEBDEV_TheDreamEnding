@@ -1,4 +1,3 @@
-// src/middleware.ts
 import { withAuth } from 'next-auth/middleware';
 import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';

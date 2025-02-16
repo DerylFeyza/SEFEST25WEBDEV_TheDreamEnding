@@ -54,7 +54,7 @@ export default function LoginForm() {
           <CardTitle className="text-2xl font-semibold text-green-800">
             Login
           </CardTitle>
-          <CardDescription>Welcome back to EcoRent</CardDescription>
+          <CardDescription>Welcome back to GreenRent</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleRegularSignIn} className="space-y-4">

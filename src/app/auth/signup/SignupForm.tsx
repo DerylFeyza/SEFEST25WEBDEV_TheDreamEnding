@@ -97,7 +97,7 @@ export default function SignupForm() {
             Create Your Account
           </CardTitle>
           <CardDescription>
-            Join EcoRent and start renting sustainably
+            Join GreenRent and start renting sustainably
           </CardDescription>
         </CardHeader>
         <CardContent>
