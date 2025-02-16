@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
-import type { Rental, User, Item } from '@prisma/client';
+import type { Rental, User, Item, SustainabilityImpact } from '@prisma/client';
 
 export const getAllRentals = async ({
   where,
@@ -13,10 +13,43 @@ export const getAllRentals = async ({
 }) => {
   return await prisma.rental.findMany({
     where,
-    include,
+    include: {
+      ...include,
+      sustainabilityImpact: true
+    },
     orderBy: { createdAt: 'desc' },
     take
   });
+};
+
+export const getLatestPendingRental = async (ownerId: string) => {
+  try {
+    const rental = await prisma.rental.findFirst({
+      where: {
+        status: 'PENDING',
+        item: { owner_id: ownerId }
+      },
+      include: {
+        User: true,
+        item: true,
+        sustainabilityImpact: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return (
+      (rental as Rental & {
+        User: User;
+        item: Item;
+        sustainabilityImpact: SustainabilityImpact;
+      }) || null
+    );
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 export const findRental = async ({
@@ -41,27 +74,4 @@ export const updateRental = async (
   data: Prisma.RentalUpdateInput
 ) => {
   return await prisma.rental.update({ where, data });
-};
-
-export const getLatestPendingRental = async (ownerId: string) => {
-  try {
-    const rental = await prisma.rental.findFirst({
-      where: {
-        status: 'PENDING',
-        item: { owner_id: ownerId }
-      },
-      include: {
-        User: true,
-        item: true
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-
-    return (rental as Rental & { User: User; item: Item }) || null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
 };

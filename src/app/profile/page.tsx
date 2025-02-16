@@ -33,8 +33,6 @@ export default function ProfilePage() {
     const loadingToast = toast.loading('Updating profile...');
 
     try {
-      // Update the session
-      console.log(name, email);
       const data = new FormData();
       if (name) {
         data.append('name', name);
@@ -43,7 +41,6 @@ export default function ProfilePage() {
         data.append('email', email);
       }
       const response = await handleUpdateUser(session?.user?.id || '', data);
-      console.log(response);
 
       await update({ name: response.name, email: response.email });
 
@@ -74,7 +71,6 @@ export default function ProfilePage() {
         oldPassword,
         newPassword
       );
-      console.log(response);
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
