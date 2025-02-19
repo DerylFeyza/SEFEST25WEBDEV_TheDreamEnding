@@ -21,5 +21,7 @@ export default async function page({
     },
     include: { item: { include: { owner: true } } }
   });
-  return <RentPage userRentals={userRentals as RentWithItemAndOwner[]} />;
+  return (
+    <RentPage userRentals={userRentals as unknown as RentWithItemAndOwner[]} />
+  );
 }
