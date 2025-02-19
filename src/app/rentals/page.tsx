@@ -1,3 +1,4 @@
+'use server';
 import { allItems } from '@/types/entities';
 import RentalsPage from './RentalsPage';
 import { getAllItems } from '@/app/utils/actions/item';

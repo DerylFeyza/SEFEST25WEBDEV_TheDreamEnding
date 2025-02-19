@@ -1,3 +1,4 @@
+'use server';
 import type { UploadApiResponse } from 'cloudinary';
 import cloudinary from '@/lib/cloudinary';
 

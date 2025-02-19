@@ -89,7 +89,7 @@ export const handleUpdateRental = async (id: string, formData: FormData) => {
     return { success: true, message: 'Rental status updated successfully' };
   } catch (error) {
     console.error(error);
-    
+
     return { success: false, message: 'Failed to update rental' };
   }
 };

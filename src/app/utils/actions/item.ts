@@ -9,6 +9,7 @@ import {
 } from '../database/item.query';
 import { handleImageDelete, imageUploader } from './imageUpload';
 import { Prisma } from '@prisma/client';
+import prisma from '@/lib/prisma';
 import { getDailyEnvironmentalRates } from './environment';
 
 export const handleCreateItem = async (formData: FormData) => {

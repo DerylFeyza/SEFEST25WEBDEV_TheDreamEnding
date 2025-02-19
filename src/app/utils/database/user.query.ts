@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import prisma from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 export const getAllUser = async () => {
   return await prisma.user.findMany({});
@@ -8,8 +8,8 @@ export const getAllUser = async () => {
 export const findUser = async (where: Prisma.UserWhereUniqueInput) => {
   return await prisma.user.findUnique({
     where: {
-      ...where,
-    },
+      ...where
+    }
   });
 };
 
@@ -23,7 +23,7 @@ export const updateUser = async (
 ) => {
   return await prisma.user.update({
     where,
-    data,
+    data
   });
 };
 
@@ -33,6 +33,6 @@ export const resetPassword = async (
 ) => {
   return await prisma.user.update({
     where,
-    data,
+    data
   });
 };
