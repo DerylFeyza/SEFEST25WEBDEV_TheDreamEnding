@@ -15,7 +15,6 @@ enum RentalStatus {
   CANCELLED
 }
 
-
 model User {
   id                  String   @id @default(uuid())
   name                String
@@ -30,41 +29,41 @@ model User {
 }
 
 model Item {
-  id              String   @id @default(uuid())
-  name            String
-  rent_price      Int
-  pickup_location String
-  category        String
-  description     String?
-  condition       String?
-  image_url       String
-  available       Boolean  @default(true)
-  item_amount     Int      @default(1)
+  id                  String   @id @default(uuid())
+  name                String
+  rent_price          Int
+  pickup_location     String
+  category            String
+  description         String?
+  condition           String?
+  image_url           String
+  available           Boolean  @default(true)
+  item_amount         Int      @default(1)
   dailyCarbonSaving   Float
   dailyWasteReduction Float
-  owner_id        String
-  is_deleted      Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  rentals         Rental[]
-  reviews         Review[]
-  owner           User     @relation(fields: [owner_id], references: [id])
+  owner_id            String
+  is_deleted          Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  rentals             Rental[]
+  reviews             Review[]
+  owner               User     @relation(fields: [owner_id], references: [id])
 }
 
 model Rental {
-  id            String       @id @default(uuid())
-  item_id       String
-  user_id       String
-  start_date    DateTime
-  finished_date DateTime
-  paid_amount   Int
-  rent_amount   Int
-  status        RentalStatus @default(PENDING)
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  item          Item         @relation(fields: [item_id], references: [id])
-  User          User         @relation(fields: [user_id], references: [id])
-  sustainabilityImpact  SustainabilityImpact?
+  id                   String                @id @default(uuid())
+  item_id              String
+  user_id              String
+  start_date           DateTime
+  finished_date        DateTime
+  paid_amount          Int
+  rent_amount          Int
+  status               RentalStatus          @default(PENDING)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  item                 Item                  @relation(fields: [item_id], references: [id])
+  User                 User                  @relation(fields: [user_id], references: [id])
+  sustainabilityImpact SustainabilityImpact?
 }
 
 model Review {
@@ -80,10 +79,10 @@ model Review {
 }
 
 model SustainabilityImpact {
-  id             String   @id @default(uuid())
+  id              String   @id @default(uuid())
   rental_id       String   @unique
-  carbon_savings  Float
-  waste_reduction Float
-  createdAt      DateTime @default(now())
-  rental         Rental   @relation(fields: [rental_id], references: [id])
+  carbon_savings  Float    @default(0)
+  waste_reduction Float    @default(0)
+  createdAt       DateTime @default(now())
+  rental          Rental   @relation(fields: [rental_id], references: [id])
 }
